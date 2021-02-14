@@ -1,0 +1,161 @@
+2.1 不具名插槽
+父组件内使用子组件
+
+<children>
+    <template v-slot> <!--此处的v-slot等同于 v-slot:default-->
+        <div>
+            template v-slot中的内容
+        </div>
+    </template>
+</children>
+子组件模板内
+
+<div>
+    <slot></slot>
+    // 父组件没有插入slot 就默认 按钮
+    //<slot><button>按钮</button></slot> 
+</div>
+最终渲染成：
+
+<div>
+     <div>
+        template v-slot中的内容
+     </div>
+</div>
+
+
+2.2 具名插槽
+2.6新特性 v-slot 只能被用于组件或者模板 上方使用v-slot
+父组件内使用子组件
+
+<children>
+    <template v-slot:header>
+        hahaha
+    </template>
+    <template v-slot:footer>
+
+        脚在这儿
+    </template>
+    <template v-slot:header>头部在这</template>
+    <!--这里放入不具名插槽-->
+    <p>中间在这</p>
+    <template v-slot:footer>
+        <!--此处会覆盖上面同名-->
+        <div>底部在这</div>
+    </template>
+</children>
+子组件模板内
+
+<div>
+    <slot></slot>
+    <slot name="header"></slot>
+    <slot name="footer"></slot>
+</div>
+最终渲染成：
+
+<div>
+    <p>中间在这</p> 
+    头部在这 
+    <div>底部在这</div>
+</div>
+
+注意：多个同名具名插后面的覆盖前面的，只会有一个起效！
+
+插槽的名字现在通过 v-slot:slotName 这种形式来使用。
+
+Tips: 没有名字的 <slot> 隐含有一个 "default" 名称
+例如
+<template v-slot:default>
+    <p>A paragraph for the main content.</p>
+    <p>And another one.</p>
+</template>
+
+<main>
+    <slot></slot>
+</main>
+
+
+
+2.3作用域插槽
+v-slot
+在父组件内使用 v-slot=”xxx” 并传入的数据
+
+<children>
+        <template v-slot:header>
+            hahaha
+        </template>
+        <template v-slot:footer>
+
+            脚在这儿
+        </template>
+        <template v-slot:header>头部在这</template>
+        <!--此处会覆盖上面同名-->
+        <p>中间在这</p>
+        <template v-slot:footer="receiveData">
+            <!--此处会覆盖上面同名-->
+            <div>底部在这</div>
+            <div>{{receiveData.sendData.firstName}}+{{receiveData.sendData.lastName}}</div>
+        </template>
+</children>
+子组件模板内
+
+<div>
+    <slot></slot>
+    <slot name="header"></slot>
+    <slot name="footer" :sendData="userInfo"></slot>
+</div>
+...
+data(){
+    return {
+        userInfo:{
+            fistrname:Brain,lastName:Lu
+        }
+    }
+}
+最终渲染成：
+
+<div>
+    <p>中间在这</p> 
+    头部在这 
+    <div>底部在这</div>
+    <div>Brain+Lu</div>
+</div>
+
+v-slot写法同时存在多个同名具名插槽，写在最后的那个起效
+同时存在两种写法的情况下 新写法的渲染优先级更高，不论是否具名都会覆盖掉就写法
+
+<template v-slot:footer>
+     template v-slot
+</template>
+<p slot="footer">slot=footer</p>   <!--此处不会被渲染，不论写在v-slot之前还是之后-->
+
+
+动态插槽名
+动态指令参数也可以用在v-slot 上，来定义动态的插槽名：
+
+<!--子组件-->
+<template>
+    <div>
+        <slot name="header"></slot>
+        <div>slot固有内容</div>
+        <slot></slot>
+        <div>slot固有内容</div>
+        <slot name="footer"></slot>
+    </div>
+</template>
+<!--父组件-->
+<template>
+    <div class="content">
+        <div>我是父组件</div>
+        <named-slot>
+            <template v-slot:[slotNameC]>看看插槽位置</template>
+        </named-slot>
+    </div>
+</template>
+
+data() {
+    return{
+        slotNameC: "footer",    // footer,header,default
+    }
+},
+

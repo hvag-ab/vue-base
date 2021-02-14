@@ -1,0 +1,32 @@
+共同点： 
+1.无匹配时返回undefined; 
+2.可以设置默认值； 
+3.优先级：赋值 > 设置的默认值 .> 无匹配时的undefined 
+数组解构：
+
+let [a, b, ...c] = [1,2,3,4];  // a=1,b=2,c=[3,4]
+应用场景：(数组值的对换)
+
+let a = 1;
+let b = 2;
+
+[a, b] = [b, a];  //a=2,b=1
+对象解构：重命名的name写在对象的value中；
+
+let data = {
+    title: 'abc',
+    list: [
+        {
+            title: 'test...',
+            des: 'des...'
+        }
+    ]
+}
+
+//拿到 第一层的title和第二层的title
+let {title,list: [{title: cnTitle}]} = data;  //title='abc',cnTitle='test...'
+
+
+b = [1,2,3]
+let a = [3,4,...b]
+// a = [3,4,1,2,3]

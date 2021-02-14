@@ -1,0 +1,62 @@
+uri 参数
+const router = new VueRouter({
+  routes: [
+    {
+      // 不能直接写:userId 否则会把后面的路径当作userId参数 导致后面的路由无法匹配  例如下面有个路由{path:/user}
+      path: '/user/:userId',
+      name: 'user',
+      component: User
+    }
+  ]
+})
+
+<router-link :to="{ name: 'user', params: { userId: 123 }}">User</router-link>
+
+this.$router.push({ name: 'user', params: { userId: 123 }})
+
+获取参数 this.$route.params
+
+query参数
+  {
+      path: '/recommend',
+      component: Recommend,
+      children: [
+        {
+          path: 'disc',  // 【或者/recommend/disc】
+          component: Disc
+        }
+      ]
+    },
+
+
+ this.$router.push({
+        path: '/recommend/disc',
+        query: {
+          id: item.dissid
+        }
+      })
+
+this.$route.query
+
+
+post传参数
+
+ this.$router.push({
+     name: `disc`,  //这里的name对应router.js中的name  【必填】
+     params: {
+       id: item.id  // 【或者/recommend/disc】
+     }
+
+ {
+    path: '/recommend',
+    name: 'recommend',
+    component: Recommend,
+    children: [
+      {
+        path: '/recommend/disc',
+        name: 'disc',
+        component: Disc
+      }
+    ]
+  }
+console.log(this.$route.params)  //访问参数

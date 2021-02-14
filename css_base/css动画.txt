@@ -1,0 +1,129 @@
+ css 动画
+
+  <div class=”shape”></div>
+   .shape
+
+  {
+
+    position: absolute;
+
+    left:125px;
+
+    top:75px;
+
+    width: 150px;
+
+    height: 150px;
+
+    border-radius:10% 50% 10% 50%;
+
+    border:2px solid #f00;
+
+    background-color: #ff0;
+
+    animation:anim 5s linear infinite;
+
+  }
+旋转
+   @keyframes anim
+
+  {
+
+    0%,15% { transform: rotate(0); }
+
+    100%   { transform: rotate(360deg);  }
+
+  }
+闪烁
+  @keyframes anim
+
+  {
+
+    0%,50%,100%   {opacity:1;}
+
+    25%,75%       {opacity:0;}
+
+  }
+# 淡入淡出
+@keyframes anim
+
+  {
+
+    0%    {  opacity:1;  transform:translateY(0);  }
+
+    100%  {  opacity:0;  transform:translateY(-225px);  }
+
+  }
+# 飞入
+@keyframes anim
+
+  {
+
+    0%    { transform:translate(-275px,-225px);  }
+
+    100%  { transform:translate(0,0);  }
+  }
+ # 缩放
+  @keyframes anim
+
+  {
+
+    0%,100%   { transform:scale(1);}
+
+    50%  { transform:scale(1.8);}
+
+  }
+  # 翻转
+   @keyframes anim
+
+  {
+
+    0%   {transform:perspective(400px) rotateY(0);}
+
+    100% {transform:perspective(400px) rotateY(360deg);}
+
+  }
+# 反复运动
+ @keyframes anim
+
+  {
+
+    0%,100%  {  transform:translateX(0); }
+
+    10%,30%,50%,70%,90%  {  transform:translateX(-15px); }
+
+    20%,40%,60%,80%  {  transform:translateX(15px); }
+
+  }
+# 摇摆
+@keyframes anim
+
+  {
+
+    20%  { transform:rotate(15deg); }
+
+    40%  { transform:rotate(-15deg); }
+
+    60%  { transform:rotate(8deg);}
+
+    80%  { transform:rotate(-8deg); }
+
+    100% { transform:rotate(0); }
+
+  }
+
+   @keyframes anim
+
+  {
+
+    0%,100%  {  transform:scale(1)  rotate(0);}
+
+    10%,20%  { transform:scale(0.9) rotate(-8deg);}
+
+    30%,50%,70%,90% { transform:scale(1.1) rotate(8deg);}
+
+    40%,60%,80%  { transform:scale(1.1) rotate(-8deg);}
+
+  }
+
+

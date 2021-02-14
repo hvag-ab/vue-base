@@ -1,0 +1,320 @@
+一、css语法
+CSS 规则由两个主要的部分构成：选择器，以及一条或多条声明。
+
+selector {
+    property: value;
+    property: value;
+    property: value;
+    ...
+  }
+例如：
+h1 {color:red; font-size:14px;}
+
+.one, p , #test {color: #F00;}  表示   .one 和 p  和 #test 这三个选择器都会执行颜色为红色。  通常用于集体声明。
+
+Paste_Image.png
+二、css的四种引入方式
+2.1 行内式
+行内式是在标记的style属性中设定CSS样式。这种方式没有体现出CSS的优势，不推荐使用。
+
+例：
+
+<p style="background-color: rebeccapurple">hello yuan</p>
+2.2 嵌入式
+嵌入式是将CSS样式集中写在网页的<head></head>标签对的<style></style>标签对中。格式如下：
+例：
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        p{
+            background-color: #2b99ff;
+        }
+    </style>
+</head>
+2.3 链接式
+将一个.css文件引入到HTML文件中
+例：
+
+<link href="mystyle.css" rel="stylesheet" type="text/css"/>
+2.4 导入式
+将一个独立的.css文件引入HTML文件中，导入式使用CSS规则引入外部CSS文件，<style>标记也是写在<head>标记中，使用的语法如下：
+
+<style type="text/css">
+
+          @import"mystyle.css"; 此处要注意.css文件的路径
+
+</style>
+注意：
+导入式会在整个网页装载完后再装载CSS文件，因此这就导致了一个问题，如果网页比较大则会儿出现先显示无样式的页面，闪烁一下之后，再出现网页的样式。这是导入式固有的一个缺陷。
+
+使用链接式时与导入式不同的是它会以网页文件主体装载前装载CSS文件，因此显示出来的网页从一开始就是带样式的效果的，它不会象导入式那样先显示无样式的网页，然后再显示有样式的网页，这是链接式的优点。
+
+三、css选择器
+3.1 基本选择器
+基本选择器
+3.2 组合选择器
+E,F   多元素选择器，同时匹配所有E元素或F元素，E和F之间用逗号分隔      :div,p { color:#f00; }
+
+E F   后代元素选择器，匹配所有属于E元素后代的F元素，E和F之间用空格分隔 :li a { font-weight:bold;｝
+
+E > F   子元素选择器，匹配所有E元素的子元素F            :div > p { color:#f00; }
+
+E + F   +表示下一个兄弟 对应于同一级上前后相邻的元素，在它们之间不存在别的元素，但可以有文本   :div + p { color:#f00; }
+
+E ~ F   普通兄弟选择器（以破折号分隔）                 :.div1 ~ p{font-size: 30px; }
+注意，关于标签嵌套：
+
+一般，块级元素可以包含内联元素或某些块级元素，但内联元素不能包含块级元素，它只能包含其它内联元素。需要注意的是，p标签不能包含块级标签。
+
+3.3 属性选择器
+E[att]          匹配所有具有att属性的E元素，不考虑它的值。（注意：E在此处可以省略。
+                比如“[cheacked]”。以下同。）   p[title] { color:#f00; }
+
+
+E[att=val]      匹配所有att属性等于“val”的E元素   div[class=”error”] { color:#f00; }
+
+
+E[att~=val]     匹配所有att属性具有多个空格分隔的值、其中一个值等于“val”的E元素
+                td[class~=”name”] { color:#f00; }
+
+E[attr^=val]    匹配属性值以指定值开头的每个元素
+                div[class^="test"]{background:#ffff00;}
+
+E[attr$=val]    匹配属性值以指定值结尾的每个元素    div[class$="test"]{background:#ffff00;}
+
+E[attr*=val]    匹配属性值中包含指定值的每个元素    div[class*="test"]{background:#ffff00;}
+
+class = 'hvag'   .hvag{color:#f00;}
+id = 'hvag'      #hvag{color:#f00;}
+
+css优先级
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+
+		/*标签选择器 权重 0,0,0,1 	小组长*/
+		div {
+			color: red;
+		}
+
+		/*类选择器	权重  0,0,1,0	班长*/
+		.one {
+			color: blue;
+		}
+
+		/*ID选择器 	权重0,1,0,0		班主任*/
+		#two {
+			color: green;
+		}
+
+		/*style= 行内样式表  权重 1,0,0,0	校长*/
+		/*!important 在样式属性的后面添加 权重最高 ∞ 教育局 局长*/
+	</style>
+</head>
+<body>
+	<div  class="one" id="two" style="color : yellow;">权重还有30秒到达战场</div>
+</body>
+</html>
+
+
+CSS继承性
+所谓继承性是指书写CSS样式表时，子标签会继承父标签的某些样式，如文本颜色和字号。想要设置一个可继承的属性，只需将它应用于父元素即可。
+恰当地使用继承可以简化代码，降低CSS样式的复杂性。子元素可以继承父元素的样式（text-，font-，line-这些元素开头的都可以继承，以及color属性）
+
+css层叠性
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		/*出现了 权重叠加的现象*/
+		/*.nav a  权重 0,0,1,0   +   0,0,0,1   =  0,0,1,1*/
+		.nav a  {
+			color: red;
+		}
+		/*first  权重  0,0,1,0*/
+		.first {
+			color: pink;
+		}
+		/*权重为 0,0,2,0*/
+		.nav .first {
+			color: pink;
+		}
+	</style>
+</head>
+<body>
+	<div>人生四大悲剧</div>
+	<div class="nav">
+		<a href="#" class="first">家里没宽带 </a>
+		<a href="#">网速不够快</a>
+		<a href="#">手机没流量 </a>
+		<a href="#">公司没WiFi</a>
+	</div>
+</body>
+</html>
+
+
+通配符选择器
+通配符选择器用“*”号表示，他是所有选择器中作用范围最广的，能匹配页面中所有的元素
+清除所有HTML标记的默认边距。
+  * {
+    margin: 0;                    /* 定义外边距*/
+    padding: 0;                   /* 定义内边距*/
+  }
+
+CSS度量单位：
+
+CSS支持很多的度量单位，能够准确的使网页达到特定值或相关尺寸。
+
+单位名称	说明	例子
+Piexels(像素)	一个像素的大小根据用户显示器尺寸和像素密度不同而设定	.classname { margin:5px; }
+Points(磅)	一英镑等于一英寸的1/72，来源于印刷背景设计。	.classname { margin:5pt; }
+Inches(英寸)	1英寸相当于72英镑	.classname { margin:5in; }
+Centimeters(厘米)	1厘米比28英镑稍大一些	.classname { margin:5cm; }
+Millimeters(毫米)	1毫米等于1/10厘米(约为3磅)	.classname { margin:5mm; }
+Picas	Picas是另一种印刷度量单位，等于12磅	.classname { margin:5pc; }
+Ems	一个em等于当前字体的大小，用于描述相对尺寸	.classname { margin:5em; }
+Exs	也与当前字体大小有关，等于小写字母x的高度，不常用	.classname { margin:5ex; }
+Percent(百分比)	这个单位与em相关，它是相对单位	.classname { margin:125%; }
+
+
+四、css属性操作
+4.1 文本属性
+
+可以用CSS设置的四种主要的字体属性：family(字体族)、style(样式)、size(大小)和weight(粗细)。
+
+1.字体族：指定要使用的字体
+
+p { font-family:Verdana, Arial, Helvetica, ans-serif, "Times New Roman"; SimSun；}
+注：在网页上使用最安全的字体是：Arial、Helvetica、Times New Roman、Times、Courier New和Courier，因为几乎所有浏览器和操作系统都支持它们。
+
+2.字体样式：通过这个属性，可以选择正常(normal)、斜体(italic)和倾斜(oblique)(一种类似斜体的效果，通常用于sans-serif字体)显示字体。
+
+.normal { font-style:normal; }
+.italic { font-style:italic; }
+oblique {font-style:oblique; }
+3.字体大小：利用前面的度量单位，可以设置字体的固定大小或相对尺寸
+
+p { font-size:14pt; }
+h3 { font-size:240%; }
+4.字体粗细：制定字体的粗细，一般使用的主要是normal和bold这两个值
+
+.bold { font-weight:bold; }
+ 此外，还可以通过改变文本的修饰、间距和对齐方式等来进一步修改文本的显示样式。
+
+1.文本修饰：通过 text-decoration (文本修饰)属性，可以为文本设置下划线underline、删除线、上划线、闪烁等效果。
+
+2.设置间距：通过 line-height (行高)属性改变行距、word-spacing(字间距)和 letter-spacing(字符间距)属性改变单词和字符间的距离。
+
+3.对齐方式：通过使用 text-align 属性可设置文本的对齐方式，CSS可用的文本对齐方式有四种：左对齐(left)、右对齐(right）、居中(center)和两端对齐(justify)。
+
+4.文本转换：通过使用 text-transform 属性进行文本转换，有四种属性来转换文本：无、首写字母大写、大写和小写 capitalize/uppercase/lowercase。
+
+5.文本缩进：通过使用 text-indent 属性可以将一段文本的首行缩进给定的大小。
+6.letter-spacing: 10px;  字母间距；
+7.word-spacing: 20px;  单词间距
+8.text-shadow:水平位置 垂直位置 模糊距离 阴影颜色;
+/* text-shadow: 水平位置  垂直位置  模糊距离 阴影颜色; */
+              text-shadow: -1px -1px 1px #000, 1px 1px 1px #fff;
+
+
+4.1.1 文本颜色：color
+CSS颜色
+
+ 使用color和backgrounnd-color属性可以为文本和对象设置前景色和背景色。可以用颜色的名称、十六进制的RGB三原色和CSS的rgb函数设置颜色。
+
+1.使用颜色名称：W3C标准化组织定义的标准的16中颜色的名称分别是：aqua(水蓝)、black(黑)、blue(蓝)、fuchsia(紫红)、gray(灰)、green(绿)、lime(绿黄)、maroon(酱紫)、navy(深蓝)、olive(橄榄绿)、ourple(紫)、red(红)、silver(银)、teal(青)、white(白)、和yellow(黄)
+
+2.使用十六进制RGB：#ff0000、#00ff00、#0000ff等
+
+3.使用rgb函数：rgb(0,255,255)
+
+css3 可以设置透明度
+color: rgba(r,g,b,a)  a 是alpha  透明的意思  取值范围 0~1之间    color: rgba(0,0,0,0.3)
+
+
+4.2 背景属性
+background-color: green; 背景色
+background-image:url('1.jpg'); 以图片为背景
+background-repeat: repeat; 背景平铺满，no-repeat不平铺满，repeat-x水平铺满，repeat-y垂直铺满；
+background-position: right top; 背景定位，也可以用像素表示（100px 50px），第一个值表示水平方向，第二个值表示垂直方向；
+以上四项也可以简写：
+
+例：background:#ffffff url('1.png') no-repeat right top;
+
+4.3 边框属性
+border-width: 2px; 边框宽度
+border-style (required): solid; 边框线的样式，solid: 实线; dashed: 虚线；
+border-color: red; 边框线的颜色；
+以上三项也可以简写为一行：
+
+例：border: 30px rebeccapurple solid;
+
+边框也可以单独设置各边的属性：
+
+border-top-style:dotted;
+border-right-style:solid;
+border-bottom-style:dotted;
+border-left-style:none;
+4.4 列表属性
+list-style-type     设置列表项标志的类型。
+list-style-image    将图象设置为列表项标志。
+list-style-position 设置列表中列表项标志的位置。
+
+list-style          简写属性。用于把所有用于列表的属性设置于一个声明中
+list-style-type属性指定列表项标记的类型：
+例：ul { list-style-type: square; }
+
+使用图像来替换列表项的标记:
+例：ul { list-style-image: url('s.png'); }
+
+
+
+css/css3实现未知宽高元素的垂直居中和水平居中
+
+.ele{
+/*设置元素绝对定位*/
+    position:absolute;
+/*top 50%*/
+    top: 50%;
+/*left 50%*/
+    left: 50%;
+/*css3   transform 实现*/
+    transform: translate(-50%, -50%);
+}
+
+.ele{
+/*弹性盒模型*/
+    display:flex;
+/*主轴居中对齐*/
+    justify-content: center;
+/*侧轴居中对齐*/
+    align-items: center;
+ }
+
+.box{
+/*让元素渲染为表格单元格*/
+    display:table-cell;
+/*设置文本水平居中*/
+    text-align:center;
+/*设置文本垂直居中*/
+    vertical-align:middle;
+}
+
+
+.ele{
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    margin:auto;
+  }
+
+ 

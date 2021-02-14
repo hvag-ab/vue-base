@@ -1,0 +1,89 @@
+ <!-- 组件使用v-bind传值 -->
+ <router :msg="msg"></router>
+
+子组件:
+<p>子组件 ----- {{msg}}</p> 
+
+ props: ["msg"], //props接收
+
+// props 属性
+props: {
+    // fooA只接受数值类型的参数
+    fooA: Number,
+    // fooB可以接受字符串和数值类型的参数
+    fooB: [String, Number],
+    // fooC可以接受字符串类型的参数，并且这个参数必须传入
+    msg: {
+      type: String,
+      required: true
+    },
+    // fooD接受数值类型的参数，如果不传入的话默认就是100
+    fooD: {
+      type: Number,
+      default: 100
+    },
+    // fooE接受对象类型的参数
+    fooE: {
+      type: Object,
+      // 当为对象类型设置默认值时必须使用函数返回
+      default: function() {
+        return { message: "Hello, world" };
+      }
+    },
+    // fooF使用一个自定义的验证器
+    fooF: {
+      validator: function(value) {
+        return value >= 0 && value <= 100;
+      }
+    },
+　　fooG: {
+      type:Array,
+      // 当为数组类型设置默认值时必须使用数组返回
+      default: function() {
+        return [];
+      }
+    },
+}
+props 是单向绑定的：当父组件的属性变化时，将传导给子组件，但是不会反过来。这是为了防止子组件修改父组件的状态。
+所以不应该在子组件中修改 props 中的值，Vue 警告。
+可以在子组件中添加一个data or computed
+computed(){
+    msg2() {
+        return this.msg + '_'
+    }
+}
+
+
+
+子向父  v-on $emit（推荐） or this.$parent
+
+子组件:
+<button @click="cyy">按钮</button>
+methods: {
+    cyy() {
+      this.$emit("zifu", "子组件向父组件传值", true)
+      //this.$parent.hehe("子组件向父组件传值", true)
+    },
+    child(){
+        return this.msg
+    }
+  }
+
+父组件:
+<router  @zifu="hehe"></router>
+methods: {
+   hehe(data, data2) {
+     console.log(data, data2);
+   }
+}
+
+父访问子  
+子组件肯定很多 需要根据角标具体子组件
+this.$children[0].child()
+$refs（推荐）
+<child ref="chi"></child>
+this.$refs.chi.child()
+
+
+子访问父
+this.$parent.hehe("子组件向父组件传值", true)

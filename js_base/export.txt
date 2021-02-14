@@ -1,0 +1,26 @@
+export 和 export default 的区别是
+export const a = 'hvag'
+const b = 'hvag'
+export default b
+
+import {a} from ... export 必须要加花括号指明导入那个变量 可以是多个
+import hh from ...  export default 可以指明别名 不需要花括号
+
+切记，一个js文件中，只能有一个export default； 
+但是，一个js文件中，可以有多个export。
+
+
+二. Promise 是一个异步对象 如果需要获取里面的数据 就要await参数 或者 .then 
+如果使用await关键词 就必须在这个父函数 添加 async 修饰成异步函数
+无论父函数是 函数 或者 匿名函数（箭头函数） 例如 async (vailid => {..})  或者 async h(){...}
+
+
+!important 有时候你添加css不起作用是因为本身自带的css权重比你高 所以需要添加这个 强制你的是最大权重
+
+const {data:res} = await this.$get() 
+表示把获取的data值映射到res中
+
+excel 导入导出功能需要
+npm install xlsx file-saver -S
+npm install script-loader -S -D
+

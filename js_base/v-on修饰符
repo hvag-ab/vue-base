@@ -1,0 +1,258 @@
+1、stop
+功能：阻止事件冒泡
+使用方法:
+
+<button v-on:click.stop="show">B</button>
+
+举例：
+
+<div id="app">
+    <div style="width: 100px;height: 100px;background-color: #008000;" v-on:click="show">
+        <button v-on:click="show">A</button>
+        <button v-on:click.stop="show">B</button>
+    </div>          
+</div>
+<script type="text/javascript">
+    var vm = new Vue({
+        el:'#app',
+        methods:{
+            show(){
+                console.log("1")
+            }
+        }
+    })
+</script>
+
+A按钮没添加stop，B按钮添加了stop。
+点击A按钮，控制台里会出现两个1。点击b按钮，控制台只出现一个1。
+
+2、prevent
+功能：阻止默认事件
+使用方法：
+
+<a href="http://www.baidu.com/" v-on:click.prevent>A</a> 
+<!-- 没有表达式-->
+
+<a href="http://www.baidu.com/" v-on:click.prevent="show">B</a>
+<!-- 有表达式 -->
+
+举例：
+
+<div id="app">
+        <a href="http://www.baidu.com/" v-on:click.prevent>A</a>
+        <br />
+        <a href="http://www.baidu.com/" v-on:click.prevent="show">B</a>
+    </div>
+
+</div>
+<script type="text/javascript">
+    var vm = new Vue({
+        el:'#app',
+        methods:{
+            show(){
+                console.log("1")
+            }
+        }
+    })
+</script>
+
+A链接的默认事件是跳转到baidu.com，添加了prevent后，点击A，默认事件无效。
+
+B链接的默认事件也是跳转到baidu.com，添加了带有表达式的prevent后，点击B，跳转事件无效，但手动添加的show方法有效，控制台中显示1，因为show不是默认事件。
+
+3、capture
+功能：添加事件侦听器时使用 capture 模式(把默认的冒泡变为捕获)
+使用方法：
+
+<!-- 父节点使用 -->
+<div style="width: 100px;height: 100px;background-color: #008000;" v-on:click.capture="show1">
+    <button v-on:click="show2">A</button>
+</div>
+
+举例：
+
+<div id="app">
+    <div style="width: 100px;height: 100px;background-color: #008000;" v-on:click.capture="show1">
+        <button v-on:click="show2">A</button>
+    </div>
+</div>
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#app',
+        methods: {
+            show1() {
+                console.log("1")
+            },
+            show2() {
+                console.log("2")
+            }
+        }
+    })
+</script>
+
+在button的父节点添加了capture，此时，再点击A，控制台将显示1 2，这证明现在是捕获。
+如果不加captrue,则是冒泡，那么控制台将显示2 1。
+要注意，捕获的capture的修饰符必须在父节点使用。
+
+4、self
+功能：只当事件是从侦听器绑定的元素本身触发时才触发回调。
+使用方法：
+
+<div v-on:click.self="show2">
+
+举例：
+
+<div id="app">
+    <div style="width: 100px;height: 100px;background-color: #008000;" v-on:click="show1">
+        第一层
+        <div v-on:click.self="show2">
+            第二层
+            <div v-on:click="show3">
+                第三层
+                <div v-on:click="show4">
+                    第四层
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#app',
+        methods: {
+            show1() {console.log("1")},
+            show2() {console.log("2")},
+            show3() {console.log("3")},
+            show4() {console.log("4")}
+        }
+    })
+</script>
+
+假设我们没有在第二层的div上添加self，那么我们点击第四层的时候，控制台将会出现结果4 3 2 1（冒泡），添加了之后，点击第四层，控制台显示4 3 1，因为第二层的self把第二层的事件设置成了仅自己调用时才有效，所以冒泡把第二层跳过了。
+
+5、.{keyCode | keyAlias}
+功能：用特定按键触发事件
+使用方法：
+
+<input type="text"  v-on:keydown.13="show1" /><br/>
+<!-- 使用KeyCode 13代表enter键 -->
+
+<input type="text"  v-on:keydown.right="show2" />
+<!-- 使用别名，right代表方向键右 -->
+
+举例:
+
+<div id="app">
+    <input type="text"  v-on:keydown.13="show1" /><br/>
+    <input type="text"  v-on:keydown.right="show2" />
+</div>
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#app',
+        methods: {
+            show1(){
+                console.log(1)
+            },
+            show2(){
+                console.log(2)
+            }
+        }
+    })
+</script>
+
+在第一个input中，按回车键，控制台输出1.
+在第二个input中，按right键，控制台输出2.
+
+6、native
+功能：监听组件根元素的原生事件。
+用法和举例：
+
+<div id="app">
+    <mycomponent v-on:click.native="myfn"></mycomponent>
+</div>
+<script type="text/javascript">
+    Vue.component('mycomponent',{
+        template:`<a href="#">点我</a>`
+    })
+    var vm = new Vue({
+                el: '#app',
+        methods:{
+            myfn(){
+                console.log(1);
+            }
+        }
+    });
+</script>
+
+使用native修饰符需要先创建一个自定义组件，然后在html中调用组件时，再使用。
+如果v-on:click不加.native,那么点击是无效的，控制台不会出现任何内容。
+
+7、once
+功能：只触发一次回调。
+用法：
+
+<mycomponent v-on:click.native.once="myfn"></mycomponent>
+
+举例：
+
+<div id="app">
+    <mycomponent v-on:click.native.once="myfn"></mycomponent>
+</div>
+<script type="text/javascript">
+    Vue.component('mycomponent',{
+        template:`<a href="#">点我</a>`
+    })
+    var vm = new Vue({
+        el: '#app',
+        methods:{
+            myfn(){
+                console.log(1);
+            }
+        }
+    });
+</script>
+
+多次点击，控制台只出现一次结果。
+
+8、left | middle | right
+功能：鼠标的左键 中键 右键触发的事件。
+用法:
+
+<div v-on:mousedown.left="myfn">AAA</div>
+<div v-on:mousedown.middle="myfn">BBB</div>
+<div v-on:mousedown.right="myfn">CCC</div>
+
+举例：
+
+<div id="app">
+    <div v-on:mousedown.left="myfn1">AAA</div>
+    <div v-on:mousedown.middle="myfn2">BBB</div>
+    <div v-on:mousedown.right="myfn3">CCC</div>
+</div>
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#app',
+        methods:{
+            myfn1(){console.log(1);},
+            myfn2(){console.log(2);},
+            myfn3(){console.log(3);}
+        }
+    });
+</script>
+
+鼠标左键点击AAA，控制台输出1
+鼠标中键点击BBB，控制台输出2
+鼠标右键点击CCC，控制台输出3
+
+9、passive
+passive 是什么？
+https://blog.csdn.net/tengxy_cloud/article/details/52858742
+https://www.cnblogs.com/ziyunfei/p/5545439.html
+
+功能：以 { passive: true } 模式添加侦听器
+用法：
+
+<div v-on:scroll.passive="onScroll">...</div>
+
+passive用于优化移动端的前端性能，我没做测试。
+
