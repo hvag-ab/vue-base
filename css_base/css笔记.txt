@@ -49,6 +49,7 @@ Paste_Image.png
 注意：
 导入式会在整个网页装载完后再装载CSS文件，因此这就导致了一个问题，如果网页比较大则会儿出现先显示无样式的页面，闪烁一下之后，再出现网页的样式。这是导入式固有的一个缺陷。
 
+<link type="stylesheet" href="mystyle.css"></link>
 使用链接式时与导入式不同的是它会以网页文件主体装载前装载CSS文件，因此显示出来的网页从一开始就是带样式的效果的，它不会象导入式那样先显示无样式的网页，然后再显示有样式的网页，这是链接式的优点。
 
 三、css选择器
@@ -59,7 +60,7 @@ E,F   多元素选择器，同时匹配所有E元素或F元素，E和F之间用�
 
 E F   后代元素选择器，匹配所有属于E元素后代的F元素，E和F之间用空格分隔 :li a { font-weight:bold;｝
 
-E > F   子元素选择器，匹配所有E元素的子元素F            :div > p { color:#f00; }
+E > F   子元素选择器，匹配所有E元素的子元素F（只选亲儿子）            :div > p { color:#f00; }
 
 E + F   +表示下一个兄弟 对应于同一级上前后相邻的元素，在它们之间不存在别的元素，但可以有文本   :div + p { color:#f00; }
 
@@ -96,7 +97,7 @@ css优先级
 	<meta charset="UTF-8">
 	<title>Document</title>
 	<style>
-
+		继承的权重最低
 		/*标签选择器 权重 0,0,0,1 	小组长*/
 		div {
 			color: red;
@@ -120,45 +121,22 @@ css优先级
 	<div  class="one" id="two" style="color : yellow;">权重还有30秒到达战场</div>
 </body>
 </html>
+// 符合标签具有优先级叠加 例如  div ul li === 0,0,0,3  .nav ul li === 0,0,1,2
 
 
 CSS继承性
 所谓继承性是指书写CSS样式表时，子标签会继承父标签的某些样式，如文本颜色和字号。想要设置一个可继承的属性，只需将它应用于父元素即可。
 恰当地使用继承可以简化代码，降低CSS样式的复杂性。子元素可以继承父元素的样式（text-，font-，line-这些元素开头的都可以继承，以及color属性）
+chrome 调试 会看到inherited from xxx
+
+%号 就是以父元素的高度的百分比
+height: 100%;
+widht:50%;
+
 
 css层叠性
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Document</title>
-	<style>
-		/*出现了 权重叠加的现象*/
-		/*.nav a  权重 0,0,1,0   +   0,0,0,1   =  0,0,1,1*/
-		.nav a  {
-			color: red;
-		}
-		/*first  权重  0,0,1,0*/
-		.first {
-			color: pink;
-		}
-		/*权重为 0,0,2,0*/
-		.nav .first {
-			color: pink;
-		}
-	</style>
-</head>
-<body>
-	<div>人生四大悲剧</div>
-	<div class="nav">
-		<a href="#" class="first">家里没宽带 </a>
-		<a href="#">网速不够快</a>
-		<a href="#">手机没流量 </a>
-		<a href="#">公司没WiFi</a>
-	</div>
-</body>
-</html>
-
+样式冲突 就近原则 覆盖 chrome就会显示为 删除线  如果要使用 就添加 !important
+样式没有冲突的  就不会覆盖 有效
 
 通配符选择器
 通配符选择器用“*”号表示，他是所有选择器中作用范围最广的，能匹配页面中所有的元素
@@ -205,12 +183,13 @@ p { font-size:14pt; }
 h3 { font-size:240%; }
 4.字体粗细：制定字体的粗细，一般使用的主要是normal和bold这两个值
 
-.bold { font-weight:bold; }
+.bold { font-weight:bold; } 等价于 font-weight:700  400表示正常不加粗
  此外，还可以通过改变文本的修饰、间距和对齐方式等来进一步修改文本的显示样式。
 
-1.文本修饰：通过 text-decoration (文本修饰)属性，可以为文本设置下划线underline、删除线、上划线、闪烁等效果。
+1.文本修饰：通过 text-decoration (文本修饰)属性，可以为文本设置下划线underline、删除线、上划线、闪烁等效果 none表示取消例如a标签的下划线。
 
-2.设置间距：通过 line-height (行高)属性改变行距、word-spacing(字间距)和 letter-spacing(字符间距)属性改变单词和字符间的距离。
+2.设置间距：通过 line-height (行高)属性改变行距 行距= 字体高度+上间距+下间距、
+word-spacing(字间距)和 letter-spacing(字符间距)属性改变单词和字符间的距离。
 
 3.对齐方式：通过使用 text-align 属性可设置文本的对齐方式，CSS可用的文本对齐方式有四种：左对齐(left)、右对齐(right）、居中(center)和两端对齐(justify)。
 
@@ -231,7 +210,7 @@ CSS颜色
 
 1.使用颜色名称：W3C标准化组织定义的标准的16中颜色的名称分别是：aqua(水蓝)、black(黑)、blue(蓝)、fuchsia(紫红)、gray(灰)、green(绿)、lime(绿黄)、maroon(酱紫)、navy(深蓝)、olive(橄榄绿)、ourple(紫)、red(红)、silver(银)、teal(青)、white(白)、和yellow(黄)
 
-2.使用十六进制RGB：#ff0000、#00ff00、#0000ff等
+2.使用十六进制RGB：#ff0000、#00ff00、#0000ff等 如果例如#ff00ff 两两相等 可以缩写成 #f0f
 
 3.使用rgb函数：rgb(0,255,255)
 
@@ -240,10 +219,11 @@ color: rgba(r,g,b,a)  a 是alpha  透明的意思  取值范围 0~1之间    col
 
 
 4.2 背景属性
-background-color: green; 背景色
-background-image:url('1.jpg'); 以图片为背景
+background-color: green; 背景色 rgba(0,0,0,0.3)
+background-image:url('1.jpg'); 以图片为背景 （小图片例如图标 一般用背景图片 不用img标签）
 background-repeat: repeat; 背景平铺满，no-repeat不平铺满，repeat-x水平铺满，repeat-y垂直铺满；
-background-position: right top; 背景定位，也可以用像素表示（100px 50px），第一个值表示水平方向，第二个值表示垂直方向；
+background-position: right top; 背景定位（水平和垂直位置），也可以用像素表示（100px 50px），第一个值表示水平方向，第二个值表示垂直方向；
+background-attachment:fixed; 背景图像固定 内容随着下拉框滚动
 以上四项也可以简写：
 
 例：background:#ffffff url('1.png') no-repeat right top;
@@ -275,46 +255,28 @@ list-style-type属性指定列表项标记的类型：
 例：ul { list-style-image: url('s.png'); }
 
 
+精灵图
+ 
+字体图标
 
-css/css3实现未知宽高元素的垂直居中和水平居中
+鼠标样式
+cursor：default; // move pointer text not-allowed
 
-.ele{
-/*设置元素绝对定位*/
-    position:absolute;
-/*top 50%*/
-    top: 50%;
-/*left 50%*/
-    left: 50%;
-/*css3   transform 实现*/
-    transform: translate(-50%, -50%);
+去掉轮廓线
+input {
+    outline:none;
 }
 
-.ele{
-/*弹性盒模型*/
-    display:flex;
-/*主轴居中对齐*/
-    justify-content: center;
-/*侧轴居中对齐*/
-    align-items: center;
- }
-
-.box{
-/*让元素渲染为表格单元格*/
-    display:table-cell;
-/*设置文本水平居中*/
-    text-align:center;
-/*设置文本垂直居中*/
+去掉textarea文本域拖曳
+textarea {
+    resize:none;
+}
+ 
+垂直居中 不能对块级元素使用
+vertical-align:baseline | middle | top | bottom
+div {
+    display:inline-block;
     vertical-align:middle;
 }
 
-
-.ele{
-    position:absolute;
-    left:0;
-    right:0;
-    top:0;
-    bottom:0;
-    margin:auto;
-  }
-
- 
+可以解决图片底部有空白缝隙

@@ -39,7 +39,9 @@
 
 
 行内块元素（inline-block）
-在行内元素中有几个特殊的标签——<img />、<input />、<td>，<button>可以对它们设置宽高和对齐属性，有些资料可能会称它们为行内块元素。
+在行内元素中有几个特殊的标签——<img />、<input />、<td>，<button>
+浮动的元素 具有行内块特性
+可以对它们设置宽高和对齐属性，有些资料可能会称它们为行内块元素。
 
 行内块元素的特点：
 （1）和相邻行内元素（行内块）在一行上,但是之间会有空白缝隙。
@@ -78,6 +80,8 @@
 能够改变元素的height，width的值.
 可以设置padding，margin的各个属性值，top，left，bottom，right都能够产生边距效果.
 
+display:none;表示隐藏元素 不在占用原来的位置
+
 
 标准文档流里面限制非常地多，标签的性质比较恶心，如果，我想既能设置宽高，又让其能并排（不霸占一行），这时候就要去脱离标准文档流。
 
@@ -89,74 +93,62 @@ CSS中有三种手段，使一个元素脱离标准文档流。
 left	元素向左浮动
 right	元素向右浮动
 none	元素不浮动（默认值）
-浮动的目的就是为了让多个块级元素同一行上显示。
 
-基本浮动规则
+浮动的目的就是为了让多个块级元素同一行上显示 
+任何浮动的元素具有行内块元素特性。
+块级盒子没有设定高度 默认跟父级元素一样宽 添加浮动后 宽度就有里面内容来决定
+浮动的盒子中间是没有缝隙的 是紧挨着的
+浮动的元素搭配标准流父级元素，父元素排列上下位置 子元素浮动排列左右位置
 
-非完全脱离文档流
-左右结构div盒子重叠现象，一般是由于相邻两个DIV一个使用浮动一个没有使用浮动。一个使用浮动一个没有导致DIV不是在同个“平面”上，但内容不会造成覆盖现象，只有DIV形成覆盖现象。
+先设置盒子大小 然后在设置盒子的位置
 
-示例代码：
+例子
+<ul class="box">
+  <li>1</li>
+  <li>2</li>
+  <li>3</li>
+  <li>4</li>
+</ul>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        *{
-            margin: 0;
-        }
+*{
+  margin:0;
+  padding:0;
+}
+li{
+  list-style:none;
+}
+.box{
+  width:1226px;
+  height:285px;
+  background-color:pink;
+  margin: 0 auto;
+}
+.box li{
+  width:296px;
+  height:100%;
+  background-color:purple;
+  float:left;
+  margin-right:14px;
+}
+//这里必须.box .last 如果只写.last 则不能覆盖上面的最后一个盒子的margin-right 权重问题
+.box .last{
+  margin-right:0px;
+}
 
-        .r1{
-            width: 100px;
-            height: 100px;
-            background-color: #7A77C8;
-            float: left;
-        }
-        .r2{
-            width: 200px;
-            height: 200px;
-            background-color: wheat;
+子元素浮动 都要设定浮动 否则会出现问题
+例如有三个盒子 第一个盒子不浮动 第二个盒子浮动 第三个盒子不浮动 会造成第二个浮动覆盖第三个盒子
+因为一个盒子独占一行 浮动的就只能覆盖后面的
 
-        }
-    </style>
-</head>
-<body>
+### 浮动的盒子只会影响浮动盒子后面的标准流 不会影响前面的标准流 
 
-<div class="r1"></div>
-<div class="r2">region2</div>
-</body>
-</html>
->>>解决方法：要么都不使用浮动；要么都使用float浮动；要么对没有使用float浮动的DIV设置margin样式。
-
-
-收缩
-
-即一个浮动的元素，如果没有设置width，那么将自动收缩为文字的宽度（非常像行内元素）。
-
-比如：
-
-未浮动默认宽度为父亲的100%
-
-<style type="text/css">
-	div{
-		background-color: pink;
-	}
-</style>
-
-浮动
-
-<style type="text/css">
-	div{
-		float: left;
-		background-color: pink;
-	}
-</style>
 
 4.9.1
 清除浮动本质
 清除浮动主要为了解决父级元素因为子级浮动引起内部高度为0 的问题。
+由于父级盒子很多情况下 不方便设置高度 但是子盒子浮动又不占位置，最后父盒子高度就变成0了
+影响下面标准流盒子的位置 父元素高度自适应（边框塌陷）
+
+
 清除浮动的方法
 其实本质叫做闭合浮动更好一些, 记住，清除浮动就是把浮动的盒子圈到里面，让父盒子闭合出口和入口不让他们出来影响其他元素。
 浮动元素脱离标准文档流会出现边框塌陷
@@ -168,35 +160,7 @@ left	不允许左侧有浮动元素（清除左侧浮动的影响）
 right	不允许右侧有浮动元素（清除右侧浮动的影响）
 both	同时清除左右两侧浮动的影响
 
-父级添加overflow属性方法
-可以通过触发BFC的方式，可以实现清除浮动效果。（BFC后面讲解）
-可以给父级添加： overflow为 hidden|auto|scroll  都可以实现。
-
-使用after伪元素清除浮动
-:after 方式为空元素的升级版，好处是不用单独加标签了
-
-使用方法：
-.clearfix:after {  content: "."; display: block; height: 0; clear: both; visibility: hidden;  }
-
-使用before和after双伪元素清除浮动
-使用方法：
-
-
-  .clearfix:before,.clearfix:after {
-    content:"";
-    display:table;  /* 这句话可以出发BFC BFC可以清除浮动,BFC我们后面讲 */
-  }
-  .clearfix:after {
-   clear:both;
-  }
-  .clearfix {
-    *zoom:1;
-  }
-​缺点：  由于IE6-7不支持:after，使用 zoom:1触发 hasLayout。
-
-****重点
-父元素高度自适应（边框塌陷）当子元素有浮动并且父元素没有高度的情况下父元素会出现高度塌陷 也就是父元素的边框为了适应子元素而变形
-例如 frist子元素添加了float属性 造成的坍塌 可以比较一下不加和添加的区别
+例如 
 <!DOCTYPE html>
 <html>
 <head>
@@ -228,7 +192,6 @@ both	同时清除左右两侧浮动的影响
 </body>
 </html>
 
-消除坍塌现象
 方法一：给父元素添加声明overflow:hidden;(触发一个BFC)
 overflow: hidden;
 
@@ -245,24 +208,33 @@ scroll : 　不管超出内容否，总是显示滚动条
 
 方法二: 在浮动元素下方添加空div,并给该元素添加声明：div{clear:both; height:0; overflow:hidden;} （这样会多一个空的div增加代码长度）
 
-    .k{clear:both; height:0; overflow:hidden;}
-    <div class="k"></div>
+方法三： 使用after伪元素清除浮动
+:after 方式为空元素的升级版，好处是不用单独加标签了
+   
+使用方法：
+.clearfix:after {  
+  content: "."; 
+  display: block; 
+  height: 0; 
+  clear: both; 
+  visibility: hidden;  
+  }
 
-方法三:添加CSS样式中伪元素after(格式如下，有些复杂)
+方法四：使用before和after双伪元素清除浮动
+使用方法：
 
- :after {
-   content: "";
-   clear: both;
-   display: block;
-   height: 0;
-   overflow: hidden;
-   visibility: hidden;
-   }
 
-方法四：给父元素添加浮动（方便简洁,不是很规范)
-
- float: left;
-
+  .clearfix:before,.clearfix:after {
+    content:"";
+    display:table;  /* 这句话可以出发BFC BFC可以清除浮动,BFC我们后面讲 */
+  }
+  .clearfix:after {
+   clear:both;
+  }
+  .clearfix {
+    *zoom:1;
+  }
+​缺点：  由于IE6-7不支持:after，使用 zoom:1触发 hasLayout。
 
 
 
@@ -272,9 +244,65 @@ position属性的常用值
 
 值	描述
 static	自动定位（默认定位方式）  就是网页中所有元素都默认的是静态定位哦！ 其实就是标准流的特性
-relative	相对定位，相对于其原文档流的位置进行定位（相对于块级元素（或行内块）自身位置进行定位）
-absolute	绝对定位，相对于离它最近的一个已定位的盒子进行定位的（默认是body）
+relative	相对定位，相对于其原文档流的位置进行定位（相对于自身原来的位置进行移动，（不会脱离标准流）
+移动位置参照点是自己原来的位置，移动后原来的位置不会被其他元素占有，继续保留原来的位置，后面的盒子还是按照标准流方式来对待）
+absolute	绝对定位，相对于离它最近的一个已定位的盒子进行定位的
+ 1.如果不存在父元素 就按照浏览器为准来定位
+ 2.存在父元素 但是父元素没有定位 那么还是按照浏览器来定位
+ 3.父元素存在任何形式定位，那么就按照父元素内部空间位置来定位
+ 4.（如果祖先元素有定位，则以最近的一级有定位的祖先元素为参考点移动位置）
+ 例如 如果存在爷元素定位，父元素未定位，那么子元素按照爷元素空间位置来定位
+ 5.绝对定位不占用原来的位置（脱离标准流）
+
 fixed	固定定位，相对于浏览器窗口进行定位
+   1.按照浏览器可视窗口位置定位
+   2.跟父元素没有任何关系
+   3.不会跟着滚动条一起滚动
+   4.固定定位不占有原来的位置
+
+sticky 粘性定位
+   1.按照浏览器可视窗口位置定位
+   2.粘性点位占用原来的位置
+   3.必须添加一个边偏移才有效
+
+含有四个属性 边偏移
+top  left right bottom
+
+定位 = 定位模式 + 边偏移
+
+top+left = 左上角   top+right=右上角  bottom+left=左下角。。。
+例如
+p{
+  position:absolute;
+  top:3px;
+  right:-3px; +左 -右
+}
+
+父相对定位  子绝对定位   
+因为绝对定位不占有原来位置 相对定位占有原来位置 后面的盒子就不会占用父盒子位置，保持整体布局
+
+固定位置相对于版心右侧定位
+<body>
+  <div class="fixed"></div>
+  <div class="w">版心盒子800</div>
+</body>
+.W{
+  width:800px;
+  height:1400px;
+  background-color:pink;
+  margin:0 auto;
+}
+.fixed{
+  position:fixed;
+  left:50%;
+  //利用margin移动盒子
+  margin-left:400px;
+  width:50px;
+  height:150px;
+  background-color:skyblue;
+}
+
+
 
 1、绝对定位元素溢出父元素，怎么隐藏问题？
 
@@ -282,27 +310,6 @@ fixed	固定定位，相对于浏览器窗口进行定位
 
 　　但是，对于position:absolute定位的子元素，仅仅使用overflow:hidden没办法将其溢出部分隐藏，需要在父元素上也加上一个定位position:relative;才能将含有position:absolute属性的子元素进行溢出隐藏
 
-1.绝对定位：可以通过top、right、bottom和left属性把元素定位到文档的任何位置。元素会脱离文档流，如果设置偏移量，会影响其他元素的位置定位
-说明：元素在没有定义宽度的情况下，宽度由元素里面的内容决定，效果和用float方法一样。
-#object {
-    position:absolute;
-    top:100px;
-    left:200px;
-}
-2.相对定位：相对于对象在文档中原来的位置来移动对象。 相对定位是将元素相对于它在标准流中的位置进行定位，元素设置此属性之后仍然处在文档流中，不影响其他元素的布局
-说明 置了relative的元素仍然处在文档流中，元素的宽高不变，设置偏移量也不会影响其他元素的位置。最外层容器设置为relative定位，在没有设置宽度的情况下，宽度是整个浏览器的宽度。
-#object {
-    position:relative;
-    top:10px;
-    left:10px;
-}
-3.固定定位：将对象移动到一个绝对位置上，当文档滚动时，该对象仍会保持在它原始的位置上，而主文档在它下面滚动。
-
-#object{
-    position:fixed;
-    top:0px;
-    left:0px;
-}
 
 叠放次序（z-index）
 当对多个元素同时设置定位时，定位元素之间有可能会发生重叠。
@@ -469,4 +476,47 @@ CSS注释
 
 .offer:before { content='Special Offer!'; }
 a:after { url(link.gif;) }
+
+
+
+css/css3实现未知宽高元素的垂直居中和水平居中
+
+.ele{
+/*设置元素绝对定位*/
+    position:absolute;
+/*top 50%*/
+    top: 50%;
+/*left 50%*/
+    left: 50%;
+/*css3   transform 实现*/
+    transform: translate(-50%, -50%);
+}
+
+.ele{
+/*弹性盒模型*/
+    display:flex;
+/*主轴居中对齐*/
+    justify-content: center;
+/*侧轴居中对齐*/
+    align-items: center;
+ }
+
+.box{
+/*让元素渲染为表格单元格*/
+    display:table-cell;
+/*设置文本水平居中*/
+    text-align:center;
+/*设置文本垂直居中*/
+    vertical-align:middle;
+}
+
+
+.ele{
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    margin:auto;
+  }
 
