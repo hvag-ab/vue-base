@@ -93,7 +93,7 @@
       :dialogVisible="dialogEditVisible"
       @editClose="editClose"
       @submit="submit"
-      @close="dialogEditVisible = false"
+      @close="editClose"
     >
       <template v-slot>
         <!--此处的v-slot等同于 v-slot:default-->
@@ -193,6 +193,7 @@ export default {
     },
     editClose () {
       this.dialogEditVisible = false
+      this.$refs.formEditRef.resetFields()
     },
     submit () {
       console.log(this.editform)
