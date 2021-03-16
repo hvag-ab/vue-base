@@ -193,6 +193,7 @@ export default {
     },
     editClose () {
       this.dialogEditVisible = false
+      // 重置表单
       this.$refs.formEditRef.resetFields()
     },
     submit () {
