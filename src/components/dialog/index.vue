@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     confirm() {
-      this.$emit('submit',this.editform)
+      this.$emit('submit')
     },
     cancel() {
       this.$emit('editClose')
