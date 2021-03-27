@@ -280,3 +280,21 @@ div {
 }
 
 可以解决图片底部有空白缝隙
+
+div内元素垂直居中
+
+第一种
+div{
+    height:30px;
+    line-height:div高度
+    text-align为center 水平居中
+}
+
+第二种
+display:flex;
+align-items：center;
+justify-content:center;
+
+第三种
+display:inner-block;
+vertical-align: middle;
