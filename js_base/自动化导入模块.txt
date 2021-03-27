@@ -1,0 +1,54 @@
+自动化导入模块
+在开发一个稍微大点的项目的时候，会习惯将路由按照模块来划分，然后就可能会出现如下这种代码：
+
+// router.js
+import Vue from 'vue'
+import Router from 'vue-router'
+// 导入了一大堆路由文件
+import mediator from './mediator'
+import judges from './judges'
+import disputeMediation from './disputeMediation'
+import onlineMediation from './onlineMediation'
+import useraction from './useraction'
+import organcenter from './organcenter'
+import admin from './admin'
+
+let routeList = []
+routeList.push(mediator, judges, disputeMediation, onlineMediation, useraction, organcenter, admin)
+ 
+export default new Router({
+    mode: 'history',
+    routes: routeList,
+})
+其实真实的远远不止这么点，就我本地项目而言就有20几个路由文件，写了一大堆的导入代码，显得很臃肿，更无奈的是每当需要新增一个路由模块，还得再次 import 再次 push，那么有没有什么办法可以解决这个问题呢？答案自然是有的。
+
+利用 webpack 的 require.context 就可以很优雅的解决这个问题，使用语法如下：
+
+require.context(
+    directory,  // 搜索的目录
+    useSubdirectories = true,  // 是否搜索子目录
+    regExp = /^\.\/.*$/,  // 匹配的目标文件格式
+    mode = 'sync'  // 同步还是异步
+)
+有了这个语法，我们就能很容易的写出下面的代码：
+
+import Vue from 'vue'
+import Router from 'vue-router'
+
+let routeList = []
+let importAll = require.context('@/publicResource/router', false, /\.js$/)
+importAll.keys().map(path => {
+    // 因为 index.js 也在 @/publicResource/router 目录下，所以需要排除
+    if (!path.includes('index.js')) {          
+        //兼容处理：.default 获取 ES6 规范暴露的内容; 后者获取 commonJS 规范暴露的内容
+        let router = importAll(path).default || importAll(path)
+        routeList(router)
+    }
+})
+ 
+export default new Router({
+    mode: 'history',
+    routes: routeList,
+})
+其实不仅仅只是用在导入路由模块这里，对于项目里任何需要导入大量本地模块的地方都可以使用这种方式来解决。
+

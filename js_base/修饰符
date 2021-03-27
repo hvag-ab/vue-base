@@ -1,30 +1,42 @@
-1、stop
-功能：阻止事件冒泡
-使用方法:
+表单修饰符
+表单类的修饰符都是和 v-model 搭配使用的，比如：v-model.lazy、v-model-trim 以及 v-model.number 等。
 
-<button v-on:click.stop="show">B</button>
+.lazy：对表单输入的结果进行延迟响应，通常和 v-model 搭配使用。
+正常情况下在 input 里输入内容会在 p 标签里实时的展示出来，但是加上 .lazy 后则需要在输入框失去焦点的时候才触发响应。
+<input type="text" v-model.lazy="name" />
+<p>{{ name }}</p>
+.trim：过滤输入内容的首尾空格，这个和直接拿到字符串然后通过 str.trim() 去除字符串首尾空格是一个意思。
+.number：如果输入的第一个字符是数字，那就只能输入数字，否则他输入的就是普通字符串。
 
-举例：
 
-<div id="app">
-    <div style="width: 100px;height: 100px;background-color: #008000;" v-on:click="show">
-        <button v-on:click="show">A</button>
-        <button v-on:click.stop="show">B</button>
-    </div>          
+事件修饰符
+Vue 的事件修饰符是专门为 v-on 设计的，可以这样使用：@click.stop="handleClick"，还能串联使用：@click.stop.prevent="handleClick"。
+
+<div @click="doDiv">
+    click div
+    <p @click="doP">click p</p>
 </div>
-<script type="text/javascript">
-    var vm = new Vue({
-        el:'#app',
-        methods:{
-            show(){
-                console.log("1")
-            }
-        }
-    })
-</script>
+.stop：阻止事件冒泡，和原生 event.stopPropagation() 是一样的效果。如上代码，当点击 p 标签的时候，div 上的点击事件也会触发，加上 .stop 后事件就不会往父级传递，那父级的事件就不会触发了。
+.prevent：阻止默认事件，和原生的 event.preventDefault() 是一样的效果。比如一个带有 href 的链接上添加了点击事件，那么事件触发的时候也会触发链接的跳转，但是加上 .prevent 后就不会触发链接跳转了。
+.capture：默认的事件流是：捕获阶段-目标阶段-冒泡阶段，即事件从最具体目标元素开始触发，然后往上冒泡。而加上 .capture 后则是反过来，外层元素先触发事件，然后往深层传递。
+.self：只触发自身的事件，不会传递到父级，和 .stop 的作用有点类似。
+.once：只会触发一次该事件。
+.passive：当页面滚动的时候就会一直触发 onScroll 事件，这个其实是存在性能问题的，尤其是在移动端，当给他加上 .passive 后触发的就不会那么频繁了。
+.native：现在在组件上使用 v-on 只会监听自定义事件 (组件用 $emit 触发的事件)。如果要监听根元素的原生事件，可以使用 .native 修饰符，
+比如如下的 el-input，如果不加 .native 当回车的时候就不会触发 search 函数。<el-input type="text" v-model="name" @keyup.enter.native="search"></el-input>
+❝串联使用事件修饰符的时候，需要注意其顺序，同样2个修饰符进行串联使用，顺序不同，结果大不一样。@click.prevent.self 会阻止所有的点击事件，而 @click.self.prevent 只会阻止对自身元素的点击。
+❞
 
-A按钮没添加stop，B按钮添加了stop。
-点击A按钮，控制台里会出现两个1。点击b按钮，控制台只出现一个1。
+select 改变事件 当选择的时候触发事件
+    <el-select v-model="selectval" filterable placeholder="请选择"  @change="onChangeStripe">
+        <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+        </el-option>
+    </el-select>
+
 
 2、prevent
 功能：阻止默认事件
@@ -255,4 +267,46 @@ https://www.cnblogs.com/ziyunfei/p/5545439.html
 <div v-on:scroll.passive="onScroll">...</div>
 
 passive用于优化移动端的前端性能，我没做测试。
+
+.exact修饰符
+.exact 修饰符允许你控制由精确的系统修饰符组合触发的事件。
+
+<!-- 即使 Alt 或 Shift 被一同按下时也会触发 -->
+<button v-on:click.ctrl="onClick">A</button>
+
+<!-- 有且只有 Ctrl 被按下的时候才触发 -->
+<button v-on:click.ctrl.exact="onCtrlClick">A</button>
+
+<!-- 没有任何系统修饰符被按下的时候才触发 -->
+<button v-on:click.exact="onClick">A</button>
+
+sync修饰符
+.sync 修饰符常被用于子组件更新父组件数据。直接看下面的代码：
+
+// parent.vue
+<child :title.sync="title"></child>
+
+// child.vue
+this.$emit('update:title', 'hello')
+子组件可以直接通过 update:title 的形式进行更新父组件中声明了 .sync 的 prop。上面父组件中的写法其实是下面这种写法的简写：
+
+<child :title="title" @update:title="title = $event"></child>
+❝注意带有 .sync 修饰符的 v-bind 不能和表达式一起使用
+❞
+如果需要设置多个 prop，比如：
+
+<child :name.sync="name" :age.sync="age" :sex.sync="sex"></child>
+可以通过 v-bind.sync 简写成这样：
+
+<child v-bind.sync="person"></child>
+
+person: {
+    name: 'bubuzou',
+    age: 21,
+    sex: 'male',
+}
+Vue 内部会自行进行解析把 person 对象里的每个属性都作为独立的 prop 传递进去，各自添加用于更新的 v-on 监听器。而从子组件进行更新的时候还是保持不变，比如：
+
+this.$emit('update:name', 'hello')
+
 

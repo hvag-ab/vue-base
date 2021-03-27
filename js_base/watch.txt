@@ -1,0 +1,56 @@
+3种深入watch的用法
+立即执行
+watch 是 Vue 中的侦听器，可以侦听一个 Vue 实例上的数据，当数据变动的时候，就会触发该侦听器。所以他的应用场景就是：当某个数据变动后需要做什么的时候就可以使用watch 啦。对于 watch，平常我们写得最多的估计是如下这种写法：
+
+watch: {
+    list: function(val) {
+        this.getMsg()
+    }
+}
+如果我们希望组件初始化的时候就执行一次 getMsg 方法，可以直接在 mounted 里调用：
+
+mounted() {
+    this.getMsg()
+}
+其实，还有一种更加简便的写法，通过给 watch 设置 immediate: true ，即可：
+
+watch: {
+    list: {
+        handler(val) {  // 注意别写错成 handle
+            this.getMsg()
+        },
+        immediate: true
+    }
+}
+深度监听
+侦听器对于属性变更后会自动调用一次，但是仅限于该属性本身，如果变更的是属性的属性，则不会触发侦听回调，如果想要实现这个功能可以给 watch 加上 'deep: true' 即可：
+
+watch: {
+    obj: {
+        handler(val) { // do something },
+        deep: true
+    }
+},
+mounted() {
+    this.obj.name = 'bubuzou'  // 将触发 handler
+}
+多个handlers
+实际上，watch 可以设置为数组，支持类型为 String、Object 和 Function。触发后，多个处理函数都将被调用。
+
+watch: {
+    obj: [
+        'print',
+        {
+            handler: 'print',
+            deep: true
+        },
+        function(val, oldValue) {
+            console.log(val)
+        }
+    ]
+},
+methods: {
+    print() {
+        console.log(this.obj)
+    }
+}

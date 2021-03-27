@@ -30,3 +30,17 @@ let {title,list: [{title: cnTitle}]} = data;  //title='abc',cnTitle='test...'
 b = [1,2,3]
 let a = [3,4,...b]
 // a = [3,4,1,2,3]
+
+深拷贝
+数组
+let a = [1,2,3]
+let b = [...a]
+b[0] = 4
+console.log(a)// [1,2,3]
+
+对象
+
+let oa = {'a':1}
+let ob = {...oa}
+ob['a'] = 2
+console.log(a) // {'a':1}

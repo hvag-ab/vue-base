@@ -1,0 +1,73 @@
+使用混入mixins
+什么是混入呢？从代码结构上来看，混入其实就是半个组件，一个 Vue 组件可以包括 template、script 和 style 三部分，而混入其实就是 script 里面的内容。一个混入对象包含任意组件选项，比如 data、methods、computed、watch 、生命周期钩子函数、甚至是 mixins 自己等，混入被设计出来就是旨在提高代码的灵活性、可复用性。
+
+什么时候应该使用混入呢？当可复用逻辑只是 JS 代码层面的，而无 template 的时候就可以考虑用混入了。比如需要记录用户在页面的停留的时间，那我们就可以把这段逻辑抽出来放在 mixins 里：
+
+// mixins.js
+export const statMixin = {
+    methods: {
+        enterPage() {},
+        leavePage() {},
+    },
+    mounted() {
+        this.enterPage()
+    },
+    beforeDestroyed() {
+        this.leavePage()
+    }
+}
+
+然后在需要统计页面停留时间的地方加上：
+
+import { statMixin } from '../common/mixins'
+export default {
+    mixins: [statMixin]
+}
+使用混入的时候要注意和组件选项的合并规则，可以分为如下三类：
+
+data 将进行递归合并，对于键名冲突的以组件数据为准：
+
+// mixinA 的 data
+data() {
+    obj: {
+        name: 'bubuzou',
+    },
+}
+
+// component A
+export default {
+    mixins: [mixinA],
+    data(){
+        obj: {
+            name: 'hello',
+            age: 21
+        },
+    },
+    mounted() {
+        console.log( this.obj )  // { name: 'bubuzou', 'age': 21 }    
+    }
+}
+对于生命周期钩子函数将会合并成一个数组，混入对象的钩子将先被执行：
+// mixin A
+const mixinA = {
+    created() {
+        console.log( '第一个执行' )
+    }
+}
+
+// mixin B
+const mixinB = {
+    mixins: [mixinA]
+    created() {
+        console.log( '第二个执行' )
+    }
+}
+
+// component A
+export default {
+    mixins: [mixinB]
+    created() {
+        console.log( '最后一个执行' )
+    }
+}
+值为对象的选项，例如 methods、components 和 directives，将被合并为同一个对象。两个对象键名冲突时，取组件对象的键值对。

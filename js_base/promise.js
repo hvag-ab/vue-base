@@ -5,8 +5,6 @@ Promise有三种状态，分别是：Pending（进行中）， Resolved(已完�
 异步函数必须返回 promise对象
 */
 
-const { resolve } = require("core-js/fn/promise");
-
 function judgeNumber(num){
     var promise1 = new Promise((resolve,reject)=>{
         num =5;

@@ -1,0 +1,52 @@
+模块化注册插件
+相信写 Vue 的同学们都知道 element-ui 这个组件库，在使用这个组件库的时候大部分都是只使用某些个别的组件，所以基本上都是按需引入需要的组件，然后就有如下一堆Vue.use() 的代码：
+
+// main.js
+import Vue from 'vue'
+import {
+    Input,
+    Radio,
+    RadioGroup,
+    Checkbox,
+    CheckboxGroup,
+    Select
+    // 还有很多组件
+} from 'element-ui'
+
+Vue.use(Input)
+Vue.use(Radio)
+Vue.use(RadioGroup)
+Vue.use(Checkbox)
+Vue.use(CheckboxGroup)
+Vue.use(Select)
+这样写是没任何问题的，就是看着不够简洁舒服，那更优雅的做法是把这块逻辑抽到一个文件里，然后通过注册插件的方式来使用他们：
+
+// elementComponent.js
+import {
+    Input,
+    Radio,
+    RadioGroup,
+    Checkbox,
+    CheckboxGroup,
+    Select
+    // 还有很多组件
+} from 'element-ui'
+
+const components = {
+    Input,
+    Radio,
+    RadioGroup,
+    Checkbox,
+    CheckboxGroup,
+    Select
+}
+function install(Vue){
+    Object.keys(components).forEach(key => Vue.use(components[key]))
+}
+export default { install }
+然后在 main.js 里使用这个插件：
+
+// main.js
+import Vue from 'vue'
+import elementComponent from './config/elementComponent'
+Vue.use(elementComponent)
