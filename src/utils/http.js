@@ -23,7 +23,7 @@ http.interceptors.request.use(config => {
     config.headers['Authorization'] = token
   }
   // 在post请求前统一添加X-CSRFToken的header信息
-  if (config.method === 'post') {
+  if (config.method != 'get') {
     config.headers['X-CSRFToken'] = Cookies.get('csrftoken')
     config.headers['X-Requested-With'] = 'XMLHttpRequest' // requestedWith 为 XMLHttpRequest 则为 Ajax 请求。
     config.headers['Content-Type'] = 'application/json; charset=UTF-8'
