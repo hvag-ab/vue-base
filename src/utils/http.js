@@ -22,19 +22,20 @@ http.interceptors.request.use(config => {
     config.headers['Authorization'] = token
   }
   // 在post请求前统一添加X-CSRFToken的header信息
-  if (config.method !== 'get') {
-    config.headers['X-CSRFToken'] = Cookies.get('csrftoken')
-    config.headers['X-Requested-With'] = 'XMLHttpRequest' // requestedWith 为 XMLHttpRequest 则为 Ajax 请求。
-    config.headers['Content-Type'] = 'application/json; charset=UTF-8'
-  }
-  // console.log(config)
+  // if (config.method !== 'get') {
+  //   config.headers['X-CSRFToken'] = Cookies.get('csrftoken')
+  //   config.headers['X-Requested-With'] = 'XMLHttpRequest' // requestedWith 为 XMLHttpRequest 则为 Ajax 请求。
+  //   config.headers['Content-Type'] = 'application/json; charset=UTF-8'
+  // }
+  // // console.log(config)
+  // return config
+  config.headers['X-CSRFToken'] = Cookies.get('csrftoken')
   return config
 }, error => {
   tryHideFullScreenLoading()
-  Message.error({
-    message: '加载超时'
-  })
-  return Promise.reject(error)
+   // do something with request error
+   console.log(error) // for debug
+   return Promise.reject(error)
 })
 
 // response interceptor
@@ -71,32 +72,32 @@ http.interceptors.response.use(
     tryHideFullScreenLoading()
     if (error && error.response) {
       switch (error.response.status) {
-          case 403:
-              // 对 403 错误进行处理 token过期
-            //   store.dispatch('user/resetToken').then(() => {
-            //     // 跳转登录页面，并将要浏览的页面fullPath传过去，登录成功后跳转需要访问的页面
-            // 　　setTimeout(() => {
-            //     　　router.replace({
-            //     　　  path: '/login',
-            //     　　query: {
-            //     　　  redirect: router.currentRoute.fullPath
-            //     　　}
-            //   　　  })
-            //   　}, 1000)
-            //   })
-              break
-          case 401:
-  
-            break
-          case 404:
-            Message.error('请求资源不存在')
-            break
-          default:
-            console.log('err:' + error) // for debug
+        case 403:
+          // 对 403 错误进行处理 token过期
+          //   store.dispatch('user/resetToken').then(() => {
+          //     // 跳转登录页面，并将要浏览的页面fullPath传过去，登录成功后跳转需要访问的页面
+          // 　　setTimeout(() => {
+          //     　　router.replace({
+          //     　　  path: '/login',
+          //     　　query: {
+          //     　　  redirect: router.currentRoute.fullPath
+          //     　　}
+          //   　　  })
+          //   　}, 1000)
+          //   })
+          break
+        case 401:
+
+          break
+        case 404:
+          Message.error('请求资源不存在')
+          break
+        default:
+          console.log('err:' + error) // for debug
       }
     }
     // 如果以上都不是的处理
-    let errorinfo = error.response.data.message  ? error.response.data.message: error.message
+    let errorinfo = error.response.data.message ? error.response.data.message : error.message
     return Promise.reject(errorinfo) // 返回接口返回的错误信息 方便后续catch err
   }
 )
