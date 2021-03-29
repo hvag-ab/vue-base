@@ -33,6 +33,16 @@ export function parseTime(time, cFormat) {
     }
     date = new Date(time)
   }
+  
+  
+  /*
+解析url query参数
+*/
+export const getQueryString = (name) => { 
+    let reg = `(^|&)${name}=([^&]*)(&|$)`
+    let r = window.location.search.substr(1).match(reg); 
+    if (r != null) return unescape(r[2]); return null; 
+}
   const formatObj = {
     y: date.getFullYear(),
     m: date.getMonth() + 1,
