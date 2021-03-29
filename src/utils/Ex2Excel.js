@@ -14,10 +14,8 @@ export const exportExcel = async (url, options = {}, method = 'post') => {
   console.log(blob)
   const fileName = Date.parse(new Date()) + '.xlsx'
   if (window.navigator.msSaveOrOpenBlob) {
-    // console.log(2)
     navigator.msSaveBlob(blob, fileName)
   } else {
-    // console.log(3)
     var link = document.createElement('a')
     link.href = window.URL.createObjectURL(blob)
     link.download = fileName
