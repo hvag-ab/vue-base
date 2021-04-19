@@ -1,56 +1,84 @@
-3种深入watch的用法
-立即执行
-watch 是 Vue 中的侦听器，可以侦听一个 Vue 实例上的数据，当数据变动的时候，就会触发该侦听器。所以他的应用场景就是：当某个数据变动后需要做什么的时候就可以使用watch 啦。对于 watch，平常我们写得最多的估计是如下这种写法：
+在vue中，使用watch来响应数据的变化。watch的用法大致有三种。下面代码是watch的一种简单的用法：
+
+<input type="text" v-model="cityName"/>
+
+new Vue({
+  el: '#root',
+  data: {
+    cityName: 'shanghai'
+  },
+  watch: {
+    cityName(newName, oldName) {
+      // ...
+    }
+  } 
+})
+
+
+直接写一个监听处理函数，当每次监听到 cityName 值发生改变时，执行函数。也可以在所监听的数据后面直接加字符串形式的方法名：
 
 watch: {
-    list: function(val) {
-        this.getMsg()
+    cityName: 'nameChange'
     }
-}
-如果我们希望组件初始化的时候就执行一次 getMsg 方法，可以直接在 mounted 里调用：
+ } 
 
-mounted() {
-    this.getMsg()
-}
-其实，还有一种更加简便的写法，通过给 watch 设置 immediate: true ，即可：
+immediate和handler
+这样使用watch时有一个特点，就是当值第一次绑定的时候，不会执行监听函数，只有值发生改变才会执行。如果我们需要在最初绑定值的时候也执行函数，则就需要用到immediate属性。
+
+比如当父组件向子组件动态传值时，子组件props首次获取到父组件传来的默认值时，也需要执行函数，此时就需要将immediate设为true。
+
+new Vue({
+  el: '#root',
+  data: {
+    cityName: ''
+  },
+  watch: {
+    cityName: {
+    　　handler(newName, oldName) {
+      　　// ...
+    　　},
+    　　immediate: true
+    }
+  } 
+})
+
+监听的数据后面写成对象形式，包含handler方法和immediate，之前我们写的函数其实就是在写这个handler方法；
+
+immediate表示在watch中首次绑定的时候，是否执行handler，值为true则表示在watch中声明的时候，就立即执行handler方法，值为false，则和一般使用watch一样，在数据发生变化的时候才执行handler。
+
+deep
+当需要监听一个对象的改变时，普通的watch方法无法监听到对象内部属性的改变，只有data中的数据才能够监听到变化，此时就需要deep属性对对象进行深度监听。
+
+<input type="text" v-model="cityName.name"/>
+1
+new Vue({
+  el: '#root',
+  data: {
+    cityName: {id: 1, name: 'shanghai'}
+  },
+  watch: {
+    cityName: {
+      handler(newName, oldName) {
+      // ...
+    },
+    deep: true,
+    immediate: true
+    }
+  } 
+})
+
+设置deep: true 则可以监听到cityName.name的变化，此时会给cityName的所有属性都加上这个监听器，当对象属性较多时，每个属性值的变化都会执行handler。如果只需要监听对象中的一个属性值，则可以做以下优化：使用字符串的形式监听对象属性：
 
 watch: {
-    list: {
-        handler(val) {  // 注意别写错成 handle
-            this.getMsg()
-        },
-        immediate: true
+    'cityName.name': {
+      handler(newName, oldName) {
+      // ...
+      },
+      deep: true,
+      immediate: true
     }
-}
-深度监听
-侦听器对于属性变更后会自动调用一次，但是仅限于该属性本身，如果变更的是属性的属性，则不会触发侦听回调，如果想要实现这个功能可以给 watch 加上 'deep: true' 即可：
+  }
 
-watch: {
-    obj: {
-        handler(val) { // do something },
-        deep: true
-    }
-},
-mounted() {
-    this.obj.name = 'bubuzou'  // 将触发 handler
-}
-多个handlers
-实际上，watch 可以设置为数组，支持类型为 String、Object 和 Function。触发后，多个处理函数都将被调用。
+这样只会给对象的某个特定的属性加监听器。
 
-watch: {
-    obj: [
-        'print',
-        {
-            handler: 'print',
-            deep: true
-        },
-        function(val, oldValue) {
-            console.log(val)
-        }
-    ]
-},
-methods: {
-    print() {
-        console.log(this.obj)
-    }
-}
+数组（一维、多维）的变化不需要通过深度监听，对象数组中对象的属性变化则需要deep深度监听。
