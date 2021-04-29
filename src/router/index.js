@@ -44,13 +44,6 @@ export const constantRoutes = [
   },
 
   {
-    path: '/test',
-    component: () => import('@/views/test_connect_backend/index'),
-    name: 'Test',
-    hidden: true
-  },
-
-  {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
