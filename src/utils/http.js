@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
-import { showFullScreenLoading, tryHideFullScreenLoading } from '@/utils/loading'
+import { startLoading, endLoading } from '@/utils/loading'
 import Cookies from 'js-cookie'
 import store from '@/store'
 import router from '@/router'
@@ -13,9 +13,9 @@ const http = axios.create({
 })
 
 http.interceptors.request.use(config => {
-  if (config.showLoading) {
-    // 如果配置了showLoading: true，则显示loading
-    showFullScreenLoading()
+  if (!config.showLoading) {
+    // 如果配置了showLoading: true，则不显示加载进度条
+    startLoading()
   }
   const token = store.getters.token
   if (token) {
@@ -32,7 +32,7 @@ http.interceptors.request.use(config => {
   config.headers['X-CSRFToken'] = Cookies.get('csrftoken')
   return config
 }, error => {
-  tryHideFullScreenLoading()
+  endLoading()
    // do something with request error
    console.log(error) // for debug
    return Promise.reject(error)
@@ -51,7 +51,7 @@ http.interceptors.response.use(
    */
   response => {
     // 响应成功关闭loading
-    tryHideFullScreenLoading()
+    endLoading()
 
     const res = response.data
 
@@ -69,7 +69,7 @@ http.interceptors.response.use(
     }
   },
   error => {
-    tryHideFullScreenLoading()
+    endLoading()
     if (error && error.response) {
       switch (error.response.status) {
         case 403:
