@@ -13,8 +13,8 @@ const http = axios.create({
 })
 
 http.interceptors.request.use(config => {
-  if (!config.showLoading) {
-    // 如果配置了showLoading: true，则不显示加载进度条
+  if (!config.hiddenLoading) {
+    // 如果配置了hiddenLoading: true，则不显示加载进度条
     startLoading()
   }
   const token = store.getters.token
