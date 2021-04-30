@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import { startLoading, endLoading } from '@/utils/loading'
+import { changePending } from '@/utils/loading'
 import Cookies from 'js-cookie'
 import store from '@/store'
 import router from '@/router'
@@ -21,18 +22,13 @@ http.interceptors.request.use(config => {
   if (token) {
     config.headers['Authorization'] = token
   }
-  // 在post请求前统一添加X-CSRFToken的header信息
-  // if (config.method !== 'get') {
-  //   config.headers['X-CSRFToken'] = Cookies.get('csrftoken')
-  //   config.headers['X-Requested-With'] = 'XMLHttpRequest' // requestedWith 为 XMLHttpRequest 则为 Ajax 请求。
-  //   config.headers['Content-Type'] = 'application/json; charset=UTF-8'
-  // }
-  // // console.log(config)
-  // return config
+
   config.headers['X-CSRFToken'] = Cookies.get('csrftoken')
+  // 重复请求逻辑
+  changePending(config)
   return config
 }, error => {
-  endLoading()
+  endLoading() //关闭loading
    // do something with request error
    console.log(error) // for debug
    return Promise.reject(error)
@@ -52,6 +48,8 @@ http.interceptors.response.use(
   response => {
     // 响应成功关闭loading
     endLoading()
+    
+    changePending(response.config)
 
     const res = response.data
 
@@ -70,6 +68,12 @@ http.interceptors.response.use(
   },
   error => {
     endLoading()
+    
+    changePending(error.config || {})
+    if(axios.isCancel(error)){ //需要注意的是在`catch`中捕获异常时，应该使用`axios.isCancel()`判断当前请求是否是主动取消的，
+        console.log('repeated request: ' + error.message)
+    }
+    
     if (error && error.response) {
       switch (error.response.status) {
         case 403:
