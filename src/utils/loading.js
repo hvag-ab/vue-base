@@ -1,48 +1,24 @@
-import { Loading } from 'element-ui'
-import _ from 'lodash'
+//导入封装axios的文件
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 
-let loading
-function startLoading() {
-  loading = Loading.service({
-    lock: true,
-    text: '正在加载中...',
-    spinner: 'el-icon-loading',
-    background: 'rgba(0, 0, 0, 0.5)'
-  })
+//配置进度条参数
+NProgress.configure({ showSpinner: false, minimum: 0.2, easeing: 'swing', speed: 1000, trickleRate: 0.2 });
+
+//防止多次请求进度条重复加载
+let loadingNum = 0;
+export const startLoading = ()=> {
+  if (loadingNum == 0) {
+    NProgress.start()
+  }
+  loadingNum++;
 }
 
-function endLoading() {
-  loading.close()
-}
-
-const tryCloseLoading = () => {
-  if (needLoadingRequestCount === 0) {
-    endLoading()
+export const endLoading = ()=> {
+  loadingNum--
+  if (loadingNum <= 0) {
+    NProgress.done()
   }
 }
 
-// 那么 showFullScreenLoading() tryHideFullScreenLoading() 就是将同一时刻的请求合并。
-// 声明一个变量 needLoadingRequestCount，每次调用showFullScreenLoading方法 needLoadingRequestCount + 1。
-// 调用tryHideFullScreenLoading()方法，needLoadingRequestCount - 1。needLoadingRequestCount为 0 时，结束 loading。
-let needLoadingRequestCount = 0
-const showFullScreenLoading = function() {
-  if (needLoadingRequestCount === 0) {
-    startLoading()
-  }
-  needLoadingRequestCount++
-}
-
-const tryHideFullScreenLoading = function() {
-  if (needLoadingRequestCount <= 0) return
-  needLoadingRequestCount--
-  if (needLoadingRequestCount === 0) {
-    _.debounce(tryCloseLoading, 300)()
-  }
-}
-
-export {
-  startLoading,
-  endLoading,
-  showFullScreenLoading,
-  tryHideFullScreenLoading
-}
+// Tips：如果想修改进度条颜色，可在app.vue样式中加入 #nprogress .bar { background: #F8C23B !important; }
