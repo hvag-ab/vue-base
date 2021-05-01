@@ -2,7 +2,7 @@ import request from '@/utils/http'
 
 export const testGet = (params) => {
     return request({
-        url: '/api/v1/app/non/',
+        url: 'yourpath',
         method: 'get',
         params
     })
