@@ -49,7 +49,6 @@
       </div>
 
     </el-form>
-    <el-button @click="test">test</el-button>
   </div>
 </template>
 
@@ -123,10 +122,6 @@ export default {
           return false
         }
       })
-    },
-    async test(){
-      const res = await testGet()
-      console.log(res)
     }
   }
 }
