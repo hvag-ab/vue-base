@@ -49,11 +49,13 @@
       </div>
 
     </el-form>
+    <el-button @click="test">test</el-button>
   </div>
 </template>
 
 <script>
 import { validUsername } from '@/utils/validate'
+import { testGet } from '@/api/test'
 
 export default {
   name: 'Login',
@@ -121,6 +123,10 @@ export default {
           return false
         }
       })
+    },
+    async test(){
+      const res = await testGet()
+      console.log(res)
     }
   }
 }

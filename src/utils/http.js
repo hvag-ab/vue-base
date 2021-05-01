@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import { startLoading, endLoading } from '@/utils/loading'
-import { changePending } from '@/utils/loading'
+import { addPending,removePending  } from '@/utils/repeat-request'
 import Cookies from 'js-cookie'
 import store from '@/store'
 import router from '@/router'
@@ -10,7 +10,7 @@ import router from '@/router'
 const http = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
   withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  timeout: 50000 // request timeout
 })
 
 http.interceptors.request.use(config => {
@@ -24,8 +24,9 @@ http.interceptors.request.use(config => {
   }
 
   config.headers['X-CSRFToken'] = Cookies.get('csrftoken')
-  // 重复请求逻辑
-  changePending(config)
+
+  removePending(config) // 在请求开始前，对之前的请求做检查取消操作
+  addPending(config) // 将当前请求添加到 pending 中
   return config
 }, error => {
   endLoading() //关闭loading
@@ -49,7 +50,9 @@ http.interceptors.response.use(
     // 响应成功关闭loading
     endLoading()
     
-    changePending(response.config)
+    removePending(response.config)// 在请求结束后，移除本次请求
+
+    console.log('res',response)
 
     const res = response.data
 
@@ -69,7 +72,6 @@ http.interceptors.response.use(
   error => {
     endLoading()
     
-    changePending(error.config || {})
     if(axios.isCancel(error)){ //需要注意的是在`catch`中捕获异常时，应该使用`axios.isCancel()`判断当前请求是否是主动取消的，
         console.log('repeated request: ' + error.message)
     }

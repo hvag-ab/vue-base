@@ -2,7 +2,7 @@ import request from '@/utils/http'
 
 export const testGet = (params) => {
     return request({
-        url: 'yourpath',
+        url: '/api/v1/app/non/',
         method: 'get',
         params
     })
@@ -32,7 +32,7 @@ export const testDelete = (data) => {
     })
 }
 
-# 上传文件请求
+//上传文件请求
 export const upload = (data) => {
     return request({
         url: 'yourpath',
