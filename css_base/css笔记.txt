@@ -298,3 +298,68 @@ justify-content:center;
 第三种
 display:inner-block;
 vertical-align: middle;
+
+transition 的用法
+
+一、语法
+
+transition: property duration timing-function delay 
+transition属性是个复合属性，她包括以下几个子属性：
+transition-property ：规定设置过渡效果的css属性名称
+transition-duration ：规定完成过渡效果需要多少秒或毫秒
+transition-timing-function ：指定过渡函数，规定速度效果的速度曲线
+transition-delay ：指定开始出现的延迟时间
+默认值分别为：all 0 ease 0 
+
+注：transition-duration 时长为0，不会产生过渡效果
+
+改变多个css属性的过渡效果时：
+
+a{ transition: background 0.8s ease-in 0.3s,color 0.6s ease-out 0.3s;}
+下面是一个例子：
+
+div {
+  width: 100px;
+  height: 100px;
+  background-color: orange;
+  margin: 20px auto;
+  border-radius: 100%;
+  -webkit-transition-property: -webkit-border-radius;
+  transition-property: border-radius;
+  -webkit-transition-duration: 3s;
+  transition-duration: 3s;
+  -webkit-transition-timing-function：ease;
+ transition-timing-function：ease;
+ 
+div:hover {
+  border-radius: 0px;
+}
+
+
+.test{
+    height: 100px;
+    width: 100px;
+    background-color: pink;
+    transition；1s 2s; /*代表持续时间为2s，延迟时间为默认值0s*/
+}    
+.test:hover{
+    width: 500px;
+}
+
+
+/* 把浏览器的宽度拖动到小于1000px时触发 */
+@media (max-width: 1000px){
+    .test{
+        width: 500px;
+    }
+}
+
+
+/*事件触发*/
+test.onclick = function(){
+    test.style.width = '300px';
+    setTimeout(function(){
+        test.style.width = '100px';
+    },3000);
+}
+
