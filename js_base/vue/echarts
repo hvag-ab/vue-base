@@ -1,0 +1,75 @@
+使用echarts
+固定开发格式
+option 对象内容 可以去 echarts官网查找对应的图表 https://echarts.apache.org/examples/zh/index.html
+ <div>
+    <div id="chart" class="wrap"></div>
+  </div>
+
+  methods: {
+    drawChart() {
+
+      let myChart = this.$echarts.init(document.getElementById('chart'))
+  
+      var option = {}
+      myChart.setOption(option)
+    },
+  },
+  mounted() {
+    this.drawChart()
+  },
+   watch: {
+    data(val) {
+      if (val.length > 0) {
+        this.drawChart()
+      }
+    },
+  },
+  
+ 问题：
+将echarts图形写在子组件，通过父组件向子组件传递数据，但是有时候刷新页面会不显示。
+这是由于向子组件传递的数据没有实时进行监听更新导致。
+解决：利用vue中的watch对父组件传递过来的数据进行实时监听。
+
+ <div>
+    <div id="chart" class="wrap"></div>
+  </div>
+
+  props: ['data'],
+  methods: {
+    drawChart() {
+
+      let myChart = this.$echarts.init(document.getElementById('chart'))
+  
+      var option = {
+        color: this.color,
+        series: [
+          {
+            name: '资源池结算',
+            type: 'pie',
+            radius: ['30%', '53%'], // 半径
+            center: ['50%', '51%'], // 位置
+            label: {
+              position: 'inner',
+            },
+            data: this.data,
+            labelLine: {
+              normal: {
+                show: false,
+              },
+            },
+          },
+        ],
+      }
+      myChart.setOption(option)
+    },
+  },
+  mounted() {
+    this.drawChart()
+  },
+   watch: {
+    data(val) {
+      if (val.length > 0) {
+        this.drawChart()
+      }
+    },
+  },
