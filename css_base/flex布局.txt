@@ -1,4 +1,5 @@
 布局核心 flex
+当我们把父盒子设为flex后 子元素的float clear vertical-align 属性失效
 display : flex; -webkit-flex; /*在webkit内核的浏览器上使用要加前缀*/ display: inline-flex; //将对象作为内联块级弹性伸缩盒显示
 兼容性写法
 .box {
