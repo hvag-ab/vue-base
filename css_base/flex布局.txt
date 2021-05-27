@@ -39,7 +39,7 @@ flex-flow属性：flex-direction和flex-wrap的简写，默认row nowrap
 justify-content属性：定义项目在主轴上的对齐方式（盒子的横轴）。
 对齐方式与轴的方向有关，本文中假设主轴从左到右。
 .box {
-   justify-content: start | end | flex-start | flex-end | center | left | right | space-between | space-around | space-evenly | stretch | safe | unsafe | baseline | first baseline | last baseline;
+   justify-content: flex-start 
 }
 flex-start（默认值）：左对齐；
 flex-end：右对齐；
@@ -61,7 +61,7 @@ stretch（默认值）：如果项目未设置高度或设为auto，将占满整
 
 align-content属性：定义多根轴线的对齐方式（就是项目排了很多行 行之间就存在轴线）
 如果项目只有一根轴线，该属性不起作用。
-所以，容器必须设置flex-wrap：···；
+所以，容器必须设置flex-wrap：wrap；
 
 .box{
     align-content: flex-start | flex-end | center | space-between | space-around | stretch;
@@ -77,7 +77,7 @@ stretch（默认值）：轴线占满整个交叉轴。
 有意思的是，当你不给项目设置高度但是给容器设置align-content不为stretch时，同一轴线上的项目的高度将等于项目中高度最高的项目。
 
 
-项目的属性
+flex 子项目的属性
 设置在项目上的属性也有6个。
 
 order
@@ -86,6 +86,63 @@ flex-shrink
 flex-basis
 flex
 align-self
+
+
+flex应用 (flex属性定义子项目分配剩余空间，用flex来表示占多少份数）
+<section>
+    <div></div>
+    <div></div>
+    <div></div>
+</section>
+
+section{
+  display:flex;
+  width:60%;
+  height:150px;
+  background-color:pink;
+  margin:0 auto;
+}
+
+section div:nth-child(1){
+  width:1000%;
+  height:150px;
+  background-color:red;
+}
+section div:nth-child(3){
+  width:1000%;
+  height:150px;
+  background-color:blue;
+}
+section div:nth-child(2){
+  flex:1;
+  background-color:green;
+}
+
+3等分
+<p>
+    <span>1</span>
+     <span>2</span>
+     <span>3</span>
+</p>
+
+p {
+    display:flex;
+  width:60%;
+  height:150px;
+  background-color:pink;
+  margin:0 auto;
+}
+
+p span {
+  flex:1
+}
+
+1:2:1等分
+p span:nth-child(2) {
+  flex:2
+}
+
+
 order属性：定义项目的排列顺序。
 数值越小，排列越靠前，默认为0，可以是负值。
 .item {
@@ -143,18 +200,6 @@ flex属性是flex-grow，flex-shrink和flex-basis的简写
 .item{
 align-self: auto | flex-start | flex-end | center | baseline | stretch;
 }
-
-justify-content 表示容器内元素排列方式
-justify-content: space-between； pace-between;元素在主轴（页面）上左右两端或者上下两端开始排列
-justify-content:center;  元素在主轴（页面）上居中排列， flex-start;元素在主轴（页面）上由左或者上开始排列，flex-end;元素在主轴（页面）上由右或者下开始排列
-
-align-items 元素在主轴（页面）当前行的横轴（纵轴）方向上的对齐方式
-center; 弹性盒子元素在该行的侧轴（纵轴）上居中放置。（居中对齐）
-flex-end; 弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴结束边界。（靠下对齐）
-flex-start; 弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴起始边界（靠上对齐）
-
-align-content 在弹性容器内的元素没有占用交叉轴上所有可用的空间时对齐容器内的各项（垂直）
-flex-start; 元素位于容器的开头。各行向弹性盒容器的起始位置堆叠。
 
 参考
 http://www.ruanyifeng.com/blog/2015/07/flex-examples.html
