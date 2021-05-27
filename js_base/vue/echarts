@@ -1,4 +1,7 @@
 使用echarts
+main.js 添加
+import * as echarts from 'echarts'
+Vue.prototype.$echarts = echarts
 固定开发格式
 option 对象内容 可以去 echarts官网查找对应的图表 https://echarts.apache.org/examples/zh/index.html
  <div>
