@@ -1,0 +1,48 @@
+<div id="app" v-cloak>
+        <component :is="currentView"></component>
+        <button @click="handleChangeView('A')">A</button>
+        <button @click="handleChangeView('B')">B</button>
+        <button @click="handleChangeView('C')">C</button>
+</div>
+我们在components中注册了三个模板，当我们点击当前按钮的时候，就会将模板切换模板，可以说是非常方便了
+
+ 
+<script>
+        var app = new Vue({
+            el: '#app',
+            components:{
+                comA:{
+                    template:`
+                        <div>组件A</div>
+                    `
+                },
+                comB:{
+                    template:`
+                        <div>组件B</div>
+                    `
+                },
+                comC:{
+                    template:`
+                        <div>组件C</div>
+                    `
+                }
+            },
+            data:{
+                currentView:'comA'
+            },
+            methods:{
+                handleChangeView:function(component){
+                    this.currentView='com'+component;
+                }
+            }
+        });
+</script>
+你会注意到，如果你选择了一篇文章，切换到 Archive 标签，然后再切换回 Posts，是不会继续展示你之前选择的文章的。这是因为你每次切换新标签的时候，Vue 都创建了一个新的 currentTabComponent 实例。
+
+重新创建动态组件的行为通常是非常有用的，但是在这个案例中，我们更希望那些标签的组件实例能够被在它们第一次被创建的时候缓存下来。为了解决这个问题，我们可以用一个 <keep-alive> 元素将其动态组件包裹起来。
+
+<!-- 失活的组件将会被缓存！-->
+<keep-alive>
+  <component v-bind:is="currentTabComponent"></component>
+</keep-alive>
+
