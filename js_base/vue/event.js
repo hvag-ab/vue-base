@@ -82,5 +82,6 @@ methods: {
 //       console.log(event.getAttribute('class'))
 //       console.log(event.parentNode.getAttribute('id'))
 //       console.log(e.currentTarget)
+          e.currentTarget.classList.add("show"); 动态给class类添加show  class="show"
 //   }
 //   }
