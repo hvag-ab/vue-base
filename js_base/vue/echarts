@@ -25,7 +25,13 @@ export default {
     async getList() {
       const response = await api()
       let datas = response.data
+      this.lineDate = ....
+      
+      // 这里主要是从接口获取数据后初始化charts数据 这里获取了下面初始化对应的组建就把data设置为空
       this.chart.setOption({
+        xAxis: {
+              data: this.lineDate
+        },
         series: [
           {
             data: datas,
@@ -36,6 +42,13 @@ export default {
     initChart() {
       this.chart = this.$echarts.init(document.getElementById('pie'))
       var option = {
+           xAxis: {
+            data: [],
+            boundaryGap: false,
+            axisTick: {
+              show: false
+            }
+          },
         ....
         series: [
           {
