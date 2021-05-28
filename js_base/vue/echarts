@@ -4,29 +4,79 @@ import * as echarts from 'echarts'
 Vue.prototype.$echarts = echarts
 固定开发格式
 option 对象内容 可以去 echarts官网查找对应的图表 https://echarts.apache.org/examples/zh/index.html
- <div>
-    <div id="chart" class="wrap"></div>
+
+<template>
+  <div class="vue-eharts">
+     <div id="pie" class="pie" ref="echart"></div>
   </div>
+</template>
 
+
+<script>
+import { api } from '@/api'
+export default {
+  name: 'echart',
+  data() {
+    return {
+      chart: null,
+    }
+  },
   methods: {
-    drawChart() {
-
-      let myChart = this.$echarts.init(document.getElementById('chart'))
-  
-      var option = {}
-      myChart.setOption(option)
+    async getList() {
+      const response = await api()
+      let datas = response.data
+      this.chart.setOption({
+        series: [
+          {
+            data: datas,
+          },
+        ],
+      })
+    },
+    initChart() {
+      this.chart = this.$echarts.init(document.getElementById('pie'))
+      var option = {
+        ....
+        series: [
+          {
+            .....
+            data: [], // 这里的data要设置为空 上面函数已经获取data值
+            ....
+            },
+          },
+        ],
+      }
+      this.chart.setOption(option)
     },
   },
   mounted() {
-    this.drawChart()
-  },
-   watch: {
-    data(val) {
-      if (val.length > 0) {
-        this.drawChart()
+    this.$nextTick(() => {
+      this.initChart()
+      this.getList()
+      this.resizefun = () => {
+        this.$echarts.init(document.getElementById('pie')).resize()
       }
-    },
+      window.addEventListener('resize', this.resizefun)
+    })
   },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.resizefun)
+    this.resizefun = null
+    if (!this.chart) {
+      return
+    }
+    this.chart.dispose()
+    this.chart = null
+  },
+}
+</script>
+
+
+<style lang="scss" scoped>
+</style>
+
+
+
   
  问题：
 将echarts图形写在子组件，通过父组件向子组件传递数据，但是有时候刷新页面会不显示。
