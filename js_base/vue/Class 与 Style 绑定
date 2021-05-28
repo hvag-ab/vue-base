@@ -65,6 +65,10 @@ data: {
   }
 }
 
+可以直接格式化
+:style="{ color: `${red}` }"
+data(){ red:'red'}
+
 可以添加方法
 :style="{ color: `${func(data)}` }"
 
