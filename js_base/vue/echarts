@@ -40,7 +40,7 @@ export default {
       })
     },
     initChart() {
-      this.chart = this.$echarts.init(document.getElementById('pie'))
+      this.chart = this.$echarts.init(this.$refs.echart)
       var option = {
            xAxis: {
             data: [],
@@ -67,7 +67,7 @@ export default {
       this.initChart()
       this.getList()
       this.resizefun = () => {
-        this.$echarts.init(document.getElementById('pie')).resize()
+        this.$echarts.init(this.$refs.echart).resize()
       }
       window.addEventListener('resize', this.resizefun)
     })
