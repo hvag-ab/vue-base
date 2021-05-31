@@ -108,7 +108,7 @@ export default {
   methods: {
     drawChart() {
 
-      let myChart = this.$echarts.init(document.getElementById('chart'))
+      let myChart = this.$echarts.init(this.$refs.pieDom)
   
       var option = {
         color: this.color,
