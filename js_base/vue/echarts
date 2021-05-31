@@ -101,7 +101,7 @@ export default {
 解决：利用vue中的watch对父组件传递过来的数据进行实时监听。
 
  <div>
-    <div id="chart" class="wrap"></div>
+    <div id="chart" class="wrap" ref="pieDom"></div>
   </div>
 
   props: ['data'],
@@ -136,7 +136,7 @@ export default {
    mounted() {
     // this.drawChart()
     this.resizefun = () => {
-      this.$echarts.init(this.$refs.barDom).resize()
+      this.$echarts.init(this.$refs.pieDom).resize()
     }
     window.addEventListener('resize', this.resizefun)
   },
