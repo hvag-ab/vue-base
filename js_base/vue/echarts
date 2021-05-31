@@ -133,8 +133,16 @@ export default {
       myChart.setOption(option)
     },
   },
-  mounted() {
-    this.drawChart()
+   mounted() {
+    // this.drawChart()
+    this.resizefun = () => {
+      this.$echarts.init(this.$refs.barDom).resize()
+    }
+    window.addEventListener('resize', this.resizefun)
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.resizefun)
+    this.resizefun = null
   },
    watch: {
     data(val) {
