@@ -1,0 +1,20 @@
+一个组件里面可以写多个style
+一个style 添加scoped 只能影响这个组件
+另一个style 不添加scoped 影响全局 这样方便全局修改 修改内部样式 只有全局修改才有效果 例如修改element ui中的组件样式
+注意 全局修改 一定要添加在需要改样式的html上添加class 来区分 以免和其他样式混乱
+
+<template>
+  ....
+</template>
+
+
+<script> 
+  ....
+</script> 
+
+<style lang="scss" scoped>
+</style>
+
+
+<style lang="scss">
+</style>
