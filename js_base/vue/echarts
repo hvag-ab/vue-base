@@ -145,9 +145,10 @@ export default {
     this.resizefun = null
   },
    watch: {
-    data(val) {
-      if (val.length > 0) {
+    data: {
+      handler(newValue) {
         this.drawChart()
-      }
+      },
     },
   },
+},
