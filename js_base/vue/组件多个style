@@ -69,3 +69,43 @@
   top: 6px !important;
 }
 </style>
+
+
+深入理解css3中 nth-child 和 nth-of-type 的区别
+在css3中有两个新的选择器可以选择父元素下对应的子元素，一个是:nth-child 另一个是:nth-of-type。
+
+ele:nth-of-type(n)是指父元素下第n个ele元素， 是从ele元素开始数 
+ele:nth-child(n)是指父元素下第n个元素且这个元素为ele，若不是，则选择失败。 是从父元素下面的子元素第一个开始数 数到第n个 如果是ele 就选中 不是就失败
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>demo</title>
+</head>
+<style>
+  .demo li:nth-child(2) {
+    color: #ff0000;
+  }
+
+  .demo li:nth-of-type(2) {
+    color: #00ff00;
+  }
+</style>
+<body>
+<div>
+  <ul class="demo">
+    <p>zero</p>
+    <li>one</li>
+    <li>two</li>
+  </ul>
+</div>
+</body>
+</html>
+
+结果如下： 
+
+
+上面这个例子，.demo li:nth-child(2)选择的是<li>one</li>节点，而.demo li:nth-of-type(2)则选择的是<li>two</li>节点。
