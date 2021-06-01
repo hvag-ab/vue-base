@@ -29,6 +29,8 @@ query参数
     },
 
 
+<router-link :to="{ name: '/recommend/disc', query: { id: item.dissid }}">xxxx</router-link>
+
  this.$router.push({
         path: '/recommend/disc',
         query: {
