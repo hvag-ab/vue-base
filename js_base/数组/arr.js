@@ -172,3 +172,6 @@ let  a =  [1,2,3];
 a.reverse();  
 console.log(a); // [3,2,1]
 
+// in 操作
+console.log(a.includes(1));
+

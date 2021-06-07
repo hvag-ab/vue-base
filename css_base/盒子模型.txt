@@ -26,6 +26,9 @@ margin:1px 2px 3px;
 /* 将顶部设置为1个像素，右侧设置为2个像素，底部设置为3个像素，左侧设置为4个像素 */
 margin:1px 2px 3px 4px;
 
+可以是负数
+例如 margin-top:-3px 向上移动 
+
 盒子左右外边距都设置为auto 表示左右边距相等 只能使用于块元素
 如果是行内块元素 就需要父元素 添加text-align:center;
 
@@ -61,6 +64,17 @@ pading一般用来保持里面字体等内容间隔边距距相等
 
 ## 如果盒子本身没有制定width or height属性 那么就会继承父盒子的width height 此时的padding不会撑开盒子的大小 但是如果设定了就会撑开
 设置同margin；
+
+padding 用于使用点击激活效果例如
+<div>
+   <span>a</span>
+   <span>b</span>
+</div>
+
+.span {
+  padding 3px 6px 3px 6px;
+  background: blue;
+}
 
 边框 border
 border : border-width || border-style || border-color

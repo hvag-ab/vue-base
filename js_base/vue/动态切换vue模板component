@@ -2,7 +2,7 @@
         <component :is="currentView"></component>
         <button @click="handleChangeView('A')">A</button>
         <button @click="handleChangeView('B')">B</button>
-        <button @click="handleChangeView('C')">C</button>
+        <button @click="handleChangeView('C')" style="color:green">C</button>
 </div>
 我们在components中注册了三个模板，当我们点击当前按钮的时候，就会将模板切换模板，可以说是非常方便了
 
