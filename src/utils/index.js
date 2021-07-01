@@ -124,3 +124,44 @@ export const getQueryString = (name) => {
     let r = window.location.search.substr(1).match(reg); 
     if (r != null) return unescape(r[2]); return null; 
 }
+
+/*
+axios 下载file
+*/
+
+export const downloadFile = response => {
+  //不能解析成json 说明可能是正常的二进制文件
+  // 前提是服务端要在header设置Access-Control-Expose-Headers: Content-Disposition
+  // 前端才能正常获取到Content-Disposition内容
+  const disposition = response.headers["content-disposition"]
+  let fileName = disposition.substring(
+    disposition.indexOf("filename=") + 9,
+    disposition.length
+  );
+  // iso8859-1的字符转换成中文
+  fileName = decodeURI(escape(fileName))
+  // 去掉双引号
+  fileName = fileName.replace(/\"/g, "")
+
+  const blobObject = response.data
+
+  //兼容ie11
+  if (window.navigator.msSaveOrOpenBlob) {
+    const blobObject = new Blob([blobObject])
+    window.navigator.msSaveOrOpenBlob(blobObject, fileName)
+  }
+
+  // 创建a标签并点击， 即触发下载
+  let url = window.URL.createObjectURL(new Blob([blobObject]))
+  let link = document.createElement("a")
+  link.style.display = "none"
+  link.href = url
+  link.setAttribute("download", fileName)
+
+  document.body.appendChild(link)
+  link.click()
+  // 释放URL 对象
+  window.URL.revokeObjectURL(link.href)
+  document.body.removeChild(link)
+}
+
