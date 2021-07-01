@@ -41,3 +41,12 @@ export const upload = (data) => {
         data
     })
 }
+
+export const download = (params) => {
+    return request({
+        url: 'api/v1/app/download_excel/',
+        method: 'get',
+        responseType: 'blob', // 表明返回服务器返回的文件二进制类型
+        params
+    })
+}

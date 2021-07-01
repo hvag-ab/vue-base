@@ -21,5 +21,5 @@ module.exports = {
   // token保存方式
   storage : 'cookie',
 
-  useMock : true
+  useMock : false
 }
