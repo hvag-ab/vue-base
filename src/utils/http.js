@@ -2,6 +2,7 @@ import axios from 'axios'
 import { Message } from 'element-ui'
 import { startLoading, endLoading } from '@/utils/loading'
 import { addPending,removePending  } from '@/utils/repeat-request'
+import { downloadFile } from "@/utils/index";
 import Cookies from 'js-cookie'
 import store from '@/store'
 import router from '@/router'
@@ -52,13 +53,33 @@ http.interceptors.response.use(
     
     removePending(response.config)// 在请求结束后，移除本次请求
 
-    console.log('res',response)
-
     const res = response.data
+    
+    const responseType = response.request.responseType
+    if (responseType === "blob") {
+      const fileReader = new FileReader()
+      fileReader.onload = e => {
+        try {
+          // 获取后端返回的错误信息 blob对象需要先转化为json
+          const result = JSON.parse(e.target.result)
+          Message({
+            message: result["message"],
+            type: "error",
+            duration: 5 * 1000
+          })
+        } catch (e) {
+           //不能解析成json 说明可能是正常的二进制文件
+            downloadFile(response)
+        }
+      }
+      fileReader.readAsText(res) // FileReader的API
+      return Promise.resolve()
+    }
+
+    // 如果不是blob类型 就是正常api接口
 
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== true) {
-      if (res.type === 'application/msexcel') return Promise.resolve(res)
       Message({
         message: res.message || 'Error',
         type: 'error',
