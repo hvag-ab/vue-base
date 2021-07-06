@@ -24,8 +24,10 @@ const clickoutside = {
     },
 }
 
-/*
+export default clickoutside
 
+/*
+import { clickoutside } from '@/directive/clickoutside'
 <template>
     <div>
         <div class="show" v-show="show" v-clickoutside="handleClose">
