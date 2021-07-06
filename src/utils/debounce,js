@@ -1,0 +1,34 @@
+/**
+ * 防抖
+ * 
+ * 
+    使用场景：如搜索框，用户在输入的时候使用change事件去调用搜索，如果用户每一次输入都去搜索的话，就会消耗很大的服务器资源。如果每次用户停止输入后，延迟超过一定时间时，才去请求服务器的话，会节省服务器资源，提升用户体验。
+
+    原理：事件回调函数在一段时间（300毫秒）后才执行，如果在这段时间内再次调用则重新从0开始计算到300毫秒的时间，当预定的时间内没有再次调用该函数，则执行事件回调函数
+ * 
+ * 
+ * @param {Function} func 要执行的回调函数 
+ * @param {Number} wait 延时的时间
+ * @param {Boolean} immediate 是否立即执行 
+ * @return null  
+ */
+ let timeout;
+ export function Debounce(func, wait=300, immediate = false) {
+    // 清除定时器
+     if (timeout !== null) clearTimeout(timeout);
+     // 立即执行，此类情况一般用不到
+     if (immediate) {
+         var callNow = !timeout;
+         timeout = setTimeout(function() {
+             timeout = null;
+         }, wait);
+         if (callNow) typeof func === 'function' && func();
+     } else {
+         // 设置定时器，当最后一次操作后，timeout不会再被清除，所以在延时wait毫秒后执行func回调方法
+         timeout = setTimeout(function() {
+             typeof func === 'function' && func();
+         }, wait);
+     }
+ }
+ 
+ // 用法类似 throttle.js
