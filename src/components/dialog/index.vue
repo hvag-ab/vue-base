@@ -32,7 +32,7 @@ export default {
       this.$emit('submit')
     },
     cancel() {
-      this.$emit('editClose')
+      this.$emit('close')
     }
   }
 }
