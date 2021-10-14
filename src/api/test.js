@@ -32,7 +32,7 @@ export const testDelete = (data) => {
     })
 }
 
-//上传文件请求
+//上传文件请求 这里有一个坑 let formData = new FormData();  这个formData对象 类字典 formData.append('a','b'), 传入这个对象的时候upload(formData) 
 export const upload = (data) => {
     return request({
         url: 'yourpath',
